@@ -62,4 +62,27 @@ const Container = styled.div`
   grid-template-columns: 10% 75% 15%;
   overflow: hidden;
   background-color: #080420;
+  .brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    img {
+      height: 2rem;
+    }
+    h3 {
+      color: white;
+      text-transform: uppercase;
+    }
+  }
+  .contacts {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+    gap: 0.8rem;
+    .contact {
+      background-color: #ffffff39;
+    }
+  }
 `;
