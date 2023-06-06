@@ -49,14 +49,14 @@ function Login() {
         const { password, username } = values;
         if (password === "") {
             toast.error(
-                "Email and Password is required.",
+                "Username and Password is required.",
                 toastOptions
             );
             return false;
         }
-        else if (username.length === "") {
+        else if (username === "") {
             toast.error(
-                "Email and Password is required.",
+                "Username and Password is required.",
                 toastOptions
             );
             return false;
