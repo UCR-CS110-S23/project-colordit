@@ -29,7 +29,7 @@ export default function Contacts({contacts, currentUser, changeChat}) {
           {
             contacts.map((contact, index)=> {
               return (
-                <div className={`contact ${index === currentSelected ? "selected":""}`}key={index}>
+                <div className={`contact ${index === currentSelected ? "selected":""}`} key={index} onClick={() => changeCurrentChat(index, contact)}>
                   <div className="avatar">
                     <img src={`data:image/svg+xml;base64,${contact.avatarImage}`} alt="avatar" />
                   </div>
