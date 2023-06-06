@@ -19,10 +19,10 @@ app.get('/username', async (req, res) => {
     var query = await userModel.find({username: req.query.username});
     // res.send(query);
     if(query == ""){
-        res.send("user not found");
+        res.json("user not found");
     }
     else{
-        res.send("user found");
+        res.json("user found");
     }
 });
 

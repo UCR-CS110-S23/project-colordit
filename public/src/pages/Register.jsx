@@ -49,8 +49,9 @@ function Register() {
 
     const handleValidation = async () => {
         const { password, confirmPassword, username, email } = values;
-        var res = await fetch(`http://localhost:3000/username?username=` + username);
-        if(res == "user found"){
+        var res = await fetch("http://localhost:3000/username?username=" + username);
+        var data = await res.json();
+        if(data == "user found"){
             toast.error(
                 "Username or email already exists", 
                 toastOptions
