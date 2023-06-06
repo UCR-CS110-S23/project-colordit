@@ -29,7 +29,6 @@ function Register() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // alert("form");
         if (handleValidation()) {
             console.log("in validation", registerRoute);
             const { username, email, password } = values;
@@ -48,9 +47,17 @@ function Register() {
         }
     };
 
-    const handleValidation =() => {
+    const handleValidation = async () => {
         const { password, confirmPassword, username, email } = values;
-        if (password !== confirmPassword) {
+        var res = await fetch(`http://localhost:3000/username?username=` + username);
+        if(res == "user found"){
+            toast.error(
+                "Username or email already exists", 
+                toastOptions
+            );
+            return false;
+        }
+        else if (password !== confirmPassword) {
             toast.error(
                 "Password and confirm password do not match.", 
                 toastOptions
@@ -62,18 +69,21 @@ function Register() {
                 "Username should be at least 3 characters.",
                 toastOptions
             );
+            return false;
         }
         else if (password.length < 8) {
             toast.error(
                 "Password should be at least 8 characters.",
                 toastOptions
             );
+            return false;
         }
-        else if (email==="") {
+        else if (email === "") {
             toast.error(
                 "Email is required.",
                 toastOptions
-            )
+            );
+            return false;
         }
 
         return true;
