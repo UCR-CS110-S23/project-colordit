@@ -27,6 +27,15 @@ function SetAvatar() {
       if (!localStorage.getItem('chat-app-user')) {
         navigate("/login");
       }
+      else{
+        const user = await JSON.parse(
+          localStorage.getItem('chat-app-user')
+        );
+        
+        if(user.isAvatarImageSet){
+          navigate("/");
+        }
+      }
     })();
   }, []);
 
@@ -37,8 +46,8 @@ function SetAvatar() {
       toast.error('Please select an avatar', toastOptions);
     } 
     else {
-       const user = await JSON.parse(
-        localStorage.getItem('chat-app-user')
+      const user = await JSON.parse(
+      localStorage.getItem('chat-app-user')
       );
 
       const { data } = await axios.post(`${setAvatarRoute}/${user._id}`, {
