@@ -24,19 +24,20 @@ function SetAvatar() {
 
     const setProfilePicture = async () => {};
 
-    useEffect( async () => {
-        const data = [];
-        for(let i = 0; i < 4; i++)
-        {
+    useEffect(() => {
+        (async () => {
+          const data = [];
+          for (let i = 0; i < 4; i++) {
             const image = await axios.get(
-                `${api}/${Math.round(Math.random() * 1000)}`
+              `${api}/${Math.round(Math.random() * 1000)}`
             );
             const buffer = new Buffer(image.data);
             data.push(buffer.toString("base64"));
-        }
-        setAvatars(data);
-        setIsLoading(false);
-    }, []);
+          }
+          setAvatars(data);
+          setIsLoading(false);
+        })();
+      }, [ ]);
 
     return (
         <>
@@ -55,7 +56,7 @@ function SetAvatar() {
                             <img src={`data:image/svg+xml;base64,${avatar}`} alt="avatar"
                             onClick={() => setSelectedAvatar(index)}
                             />
-                            "jfdsfjdnsfndsjk"
+
                         </div>
                     )
                 })
