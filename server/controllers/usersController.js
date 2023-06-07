@@ -1,59 +1,59 @@
-const User = require("../models/userModel");
+const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const fetch = require("node-fetch");
 
-module.exports.register = async (req,res,next) => {
-    // console.log(req.body);
+var register = async (req,res,next) => {
     try {
-        const {username,email,password} = req.body;
+        const username = req.body.username;
+        const password = req.body.password;
+        const data = await userModel.find({username: username});
 
-        const usernameCheck = await User.findOne({ username });
-        if (usernameCheck)
-            return res.json({msg: "Email already in use", status: false});
-
-        const emailCheck = await User.findOne({ email });
-        if (emailCheck)
-            return res.json({msg: "Email already in use", status: false});
+        if (data != ""){
+            return res.json({msg: "Username already in use", status: false});
+        }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        
-        const user = await User.create({
-            email,
-            username,
-            password: hashedPassword,
+        const user = await userModel.create({
+            username: username,
+            password: hashedPassword
         });
+
         delete user.password;
         return res.json({ status: true, user });
-    } catch(ex) {
-        next(ex);
+    } 
+    catch(err) {
+        console.log(err.message);
+        next(err);
     }
 };
 
-module.exports.login = async (req,res,next) => {
-    // console.log(req.body);
+var login = async (req,res,next) => {
     try {
         const {username, password} = req.body;
+        const user = await userModel.find({username: username});
 
-        const user = await User.findOne({ username });
-        if (!user)
+        if (user == ""){
             return res.json({msg: "Incorrect username or password", status: false});
+        }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid = await bcrypt.compare(password, user[0].password);
 
-        if (!isPasswordValid)
+        if (!isPasswordValid){
             return res.json({msg: "Incorrect username or password", status: false});
+        }
 
         delete user.password;
-
         return res.json({ status: true, user });
-    } catch(ex) {
-        next(ex);
+    } 
+    catch(err) {
+        console.log(err.message);
+        next(err);
     }
 };
 
-module.exports.getAllUsers = async (req, res, next) => {
+var getAllUsers = async (req, res, next) => {
     try {
         const users = await User.find({_id: { $ne:req.params.id } }).select([
-            "email",
             "username",
             "avatarImage",
             "_id"
@@ -64,3 +64,7 @@ module.exports.getAllUsers = async (req, res, next) => {
         next(ex);
     }
 };
+
+module.exports.register = register;
+module.exports.getAllUsers = getAllUsers;
+module.exports.login = login;

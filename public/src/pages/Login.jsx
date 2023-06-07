@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../assets/logo.svg"
-import { ToastContainer,toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
-import axios from "axios"
+import Logo from "../assets/logo.svg";
+import { ToastContainer,toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 import { loginRoute } from '../utils/APIRoutes';
-
+import waveBackground from '../assets/waveBackground.png';
 
 function Login() {
 
@@ -27,42 +27,40 @@ function Login() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // alert("form");
+        toast.dismiss();
+
         if (handleValidation()) {
-            console.log("in validation", loginRoute);
             const { username, password } = values;
-                const { data } = await axios.post(loginRoute, {
-                    username,
-                    password,
-                });
+            const { data } = await axios.post(loginRoute, {
+                username,
+                password
+            });
+                
             if (data.status === false) {
                 toast.error(data.msg, toastOptions);
             }
+
             if (data.status === true) {
-                localStorage.setItem('chat-app-user', JSON.stringify(data.user))
-                navigate("/");
+                console.log("Successful Login");
+                // localStorage.setItem('chat-app-user', JSON.stringify(data.user))
+                // navigate("/");
             }
         }
     };
 
     const handleValidation =() => {
         const { password, username } = values;
-        if (password === "") {
+        var valid = true;
+
+        if (password === "" || username === "") {
             toast.error(
                 "Username and Password is required.",
                 toastOptions
             );
-            return false;
-        }
-        else if (username === "") {
-            toast.error(
-                "Username and Password is required.",
-                toastOptions
-            );
-            return false;
+            valid = false;
         }
 
-        return true;
+        return valid;
     }
 
     const handleChange = (event) => {
@@ -125,6 +123,7 @@ const FormContainer = styled.div`
     }
     form {
         display: flex;
+        align-items: center;
         flex-direction: column;
         gap: 2rem;
         background-color: #1d1238;
@@ -146,6 +145,7 @@ const FormContainer = styled.div`
         button {
             background-color: #997af0;
             color: white;
+            width: 100%;
             padding: 1rem 2rem;
             border: none;
             font-weight: bold;
