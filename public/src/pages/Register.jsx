@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../assets/logo.svg"
-import { ToastContainer,toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
-import axios from "axios"
+import Logo from "../assets/logo.svg";
+import { ToastContainer,toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 import { registerRoute } from '../utils/APIRoutes';
 
 
@@ -144,6 +144,7 @@ const FormContainer = styled.div`
     }
     form {
         display: flex;
+        align-items: center;
         flex-direction: column;
         gap: 2rem;
         background-color: #1d1238;
@@ -165,6 +166,7 @@ const FormContainer = styled.div`
         button {
             background-color: #997af0;
             color: white;
+            width: 100%;
             padding: 1rem 2rem;
             border: none;
             font-weight: bold;
