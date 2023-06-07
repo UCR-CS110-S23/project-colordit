@@ -2,6 +2,7 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const fetch = require("node-fetch");
 
+
 var register = async (req,res,next) => {
     try {
         const username = req.body.username;
@@ -65,11 +66,7 @@ var getAllUsers = async (req, res, next) => {
     }
 };
 
-module.exports.register = register;
-module.exports.getAllUsers = getAllUsers;
-module.exports.login = login;
-
-module.exports.setAvatar = async (req, res, next) => {
+var setAvatar = async (req, res, next) => {
     try {
       const userId = req.params.id;
       const avatarImage = req.body.image;
@@ -89,3 +86,8 @@ module.exports.setAvatar = async (req, res, next) => {
       next(ex);
     }
   };
+
+module.exports.register = register;
+module.exports.getAllUsers = getAllUsers;
+module.exports.login = login;
+module.exports.setAvatar = setAvatar;
