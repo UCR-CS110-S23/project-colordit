@@ -22,6 +22,15 @@ function SetAvatar() {
     theme: "dark",
   }
 
+  /*
+  useEffect(() => {
+    (async () => {
+      if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
+        navigate("/login");
+      }
+    })();
+  }, [navigate]);
+  */
   async function setProfilePicture() {
     if (!selectedAvatar) {
       toast.error('Please select an avatar', toastOptions);
