@@ -22,15 +22,14 @@ function SetAvatar() {
     theme: "dark",
   }
 
-  /*
   useEffect(() => {
     (async () => {
-      if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
+      if (!localStorage.getItem('chat-app-user')) {
         navigate("/login");
       }
     })();
-  }, [navigate]);
-  */
+  }, []);
+
   async function setProfilePicture() {
     toast.dismiss();
 
