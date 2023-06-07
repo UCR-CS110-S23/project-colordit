@@ -17,30 +17,12 @@ db.once("open", () => console.log("Connected to Database"));
 
 app.get('/username', async (req, res) => {
     var query = await userModel.find({username: req.query.username});
-    // res.send(query);
+
     if(query == ""){
         res.json("user not found");
     }
     else{
         res.json("user found");
-    }
-});
-
-app.post('/new_user', async (req, res) => {
-    const user = new userModel({
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password,
-        isAvatarImageSet: req.body.isAvatarImageSet,
-        avatarImage: req.body.avatarImage
-    });
-
-    try{
-        const newUser = await user.save();
-        res.json(newUser);
-    }
-    catch(err){
-        res.json({message: err.message});
     }
 });
 

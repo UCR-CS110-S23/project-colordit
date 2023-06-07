@@ -14,7 +14,6 @@ function Register() {
 
     const [values,setValues] = useState({
         username: "",
-        email: "",
         password: "",
         confirmPassword: "",
     });
@@ -22,72 +21,62 @@ function Register() {
     const toastOptions = {
         position: 'bottom-right',
         autoClose: 8000,
-        pauseOnHover: true,
-        draggable: true,
+        pauseOnHover: false,
+        draggable: false,
         theme: "dark",
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (handleValidation()) {
-            console.log("in validation", registerRoute);
-            const { username, email, password } = values;
-                const { data } = await axios.post(registerRoute, {
-                    username,
-                    email,
-                    password,
-                });
+        toast.dismiss();
+
+        if (await handleValidation()) {
+            const { username, password } = values;
+            const { data } = await axios.post(registerRoute, {
+                username,
+                password
+            });
+
             if (data.status === false) {
                 toast.error(data.msg, toastOptions);
             }
-            if (data.status === true) {
-                localStorage.setItem('chat-app-user', JSON.stringify(data.user))
-                navigate("/");
-            }
+
+            // if (data.status === true) {
+            //     localStorage.setItem('chat-app-user', JSON.stringify(data.user))
+            //     navigate("/");
+            // }
         }
     };
 
     const handleValidation = async () => {
-        const { password, confirmPassword, username, email } = values;
-        var res = await fetch("http://localhost:3000/username?username=" + username);
-        var data = await res.json();
-        if(data == "user found"){
-            toast.error(
-                "Username or email already exists", 
-                toastOptions
-            );
-            return false;
-        }
-        else if (password !== confirmPassword) {
-            toast.error(
-                "Password and confirm password do not match.", 
-                toastOptions
-            );
-            return false;
-        }
-        else if (username.length < 3) {
+        const { username, password, confirmPassword } = values;
+        var valid = true;
+        
+        if (username.length < 3) {
             toast.error(
                 "Username should be at least 3 characters.",
                 toastOptions
             );
-            return false;
+            valid =  false;
         }
-        else if (password.length < 8) {
+
+        if (password.length < 8) {
             toast.error(
                 "Password should be at least 8 characters.",
                 toastOptions
             );
-            return false;
-        }
-        else if (email === "") {
-            toast.error(
-                "Email is required.",
-                toastOptions
-            );
-            return false;
+            valid =  false;
         }
 
-        return true;
+        if (password !== confirmPassword) {
+            toast.error(
+                "Password and confirm password do not match.", 
+                toastOptions
+            );
+            valid =  false;
+        }
+
+        return valid;
     }
 
     const handleChange = (event) => {
@@ -108,12 +97,6 @@ function Register() {
                         type='text' 
                         placeholder='Username' 
                         name='username' 
-                        onChange={(e) => handleChange(e)} 
-                    />
-                    <input 
-                        type='email' 
-                        placeholder='Email' 
-                        name='email' 
                         onChange={(e) => handleChange(e)} 
                     />
                     <input 
