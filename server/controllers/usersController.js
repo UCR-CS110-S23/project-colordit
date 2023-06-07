@@ -68,3 +68,24 @@ var getAllUsers = async (req, res, next) => {
 module.exports.register = register;
 module.exports.getAllUsers = getAllUsers;
 module.exports.login = login;
+
+module.exports.setAvatar = async (req, res, next) => {
+    try {
+      const userId = req.params.id;
+      const avatarImage = req.body.image;
+      const userData = await User.findByIdAndUpdate(
+        userId,
+        {
+          isAvatarImageSet: true,
+          avatarImage,
+        },
+        { new: true }
+      );
+      return res.json({
+        isSet: userData.isAvatarImageSet,
+        image: userData.avatarImage,
+      });
+    } catch (ex) {
+      next(ex);
+    }
+  };
