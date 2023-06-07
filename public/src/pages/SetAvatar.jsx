@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer,toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import axios from "axios"
-import { SetAvatarRoute } from "../utils/APIRoutes";
+import { setAvatarRoute } from "../utils/APIRoutes";
 import loader from "../assets/loader.gif";
 
 export default function SetAvatar() {
@@ -23,10 +23,10 @@ export default function SetAvatar() {
     const setProfilePicture = async () => {};
     useEffect( async() => {
         const data = [];
-        for(let i = 0; i < 4; i ++)
+        for(let i = 0; i < 4; i++)
         {
             const image = await axios.get(
-                '${api}/${Math.round(Math.random(*1000))}'
+                `${api}/${Math.round(Math.random() * 1000)}`
             );
             const buffer = new Buffer(image.data);
             data.push(buffer.toString("base64"));
@@ -45,9 +45,10 @@ export default function SetAvatar() {
                 avatars.map((avatar, index) => {
                     return (
                         <div 
-                            className={'avatar ${selectedAvatar === index ? "selected : "" }'}
+                            key = {index}
+                            className={`avatar ${selectedAvatar === index ? "selected" : "" }`}
                         >
-                            <img src={'data:image/svg+xml;base65,${avatar}'} alt='avatar'
+                            <img src={`data:image/svg+xml;base64,${avatar}`} alt="avatar"
                             onClick={() => setSelectedAvatar(index)}
                             />
                         </div>
@@ -58,5 +59,26 @@ export default function SetAvatar() {
         ;
         <ToastContainer/>
         </>
-    )
+    );
 }
+
+const Container =  styled.div`
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+  background-color: #26184a;
+  .container {
+    height: 85vh;
+    width: 85vw;
+    background-color: #1d1238;
+    display: grid;
+    grid-template-columns: 25% 75%;
+    @media screen and (min-width:720px) and (max-width:1080px) {
+      grid-template-columns: 35% 65%;
+    }
+  }
+  `;
