@@ -14,26 +14,32 @@ function Chat() {
   const [currentChat, setCurrentChat] = useState(undefined);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(async () => {
-    if (!localStorage.getItem("chat-app-user")) {
-      navigate("/login");
-    } 
-    else {
-      setCurrentUser(await JSON.parse(localStorage.getItem("chat-app-user")));
-      setIsLoaded(true);
-    }
-  },[]);
-  useEffect(async () => {
-    if(currentUser) {
-      if(currentUser.isAvatarImageSet) {
-        const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-        setContacts(data.data);
-      }
+  useEffect(() => {
+    const fetchData = async() => {
+      if (!localStorage.getItem("chat-app-user")) {
+        navigate("/login");
+      } 
       else {
-        navigate("/setAvatar");
+        setCurrentUser(await JSON.parse(localStorage.getItem("chat-app-user")));
+        setIsLoaded(true);
       }
     }
-  },[currentUser]);
+    fetchData();
+  },[]);
+  // useEffect(() => {
+  //   const fetchContacts = async() => {
+  //     if(currentUser) {
+  //       if(currentUser.isAvatarImageSet) {
+  //         const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
+  //         setContacts(data.data);
+  //       }
+  //       else {
+  //         navigate("/setAvatar");
+  //       }
+  //     }
+  //   }
+  //   fetchContacts();
+  // },[currentUser]);
 
   const handleChatChange = (chat) => {
     setCurrentChat(chat);

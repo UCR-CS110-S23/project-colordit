@@ -10,7 +10,7 @@ import { registerRoute } from '../utils/APIRoutes';
 
 function Register() {
 
-    const navigate = useNavigate;
+    const navigate = useNavigate();
 
     const [values,setValues] = useState({
         username: "",
@@ -41,10 +41,10 @@ function Register() {
                 toast.error(data.msg, toastOptions);
             }
 
-            // if (data.status === true) {
-            //     localStorage.setItem('chat-app-user', JSON.stringify(data.user))
-            //     navigate("/");
-            // }
+            if (data.status === true) {
+                localStorage.setItem('chat-app-user', JSON.stringify(data.user))
+                navigate("/login");
+            }
         }
     };
 

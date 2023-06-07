@@ -10,7 +10,7 @@ import waveBackground from '../assets/waveBackground.png';
 
 function Login() {
 
-    const navigate = useNavigate;
+    const navigate = useNavigate();
 
     const [values,setValues] = useState({
         username: "",
@@ -42,8 +42,8 @@ function Login() {
 
             if (data.status === true) {
                 console.log("Successful Login");
-                // localStorage.setItem('chat-app-user', JSON.stringify(data.user))
-                // navigate("/");
+                localStorage.setItem('chat-app-user', JSON.stringify(data.user))
+                navigate("/");
             }
         }
     };
