@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import styled from "styled-components";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { allUsersRoute } from '../utils/APIRoutes';
 import Contacts from '../components/Contacts';
-import Welcome from '../components/Welcome'
+import Welcome from '../components/Welcome';
 import ChatContainer from '../components/ChatContainer';
 
 function Chat() {
@@ -75,4 +75,4 @@ const Container =  styled.div`
   }
 `;
 
-export default Chat
+export default Chat;

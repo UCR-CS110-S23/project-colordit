@@ -6,10 +6,9 @@ var register = async (req,res,next) => {
     try {
         const username = req.body.username;
         const password = req.body.password;
-        const usernameCheck = await fetch("http://localhost:3000/username?username=" + username)
-        const data = await usernameCheck.json()
+        const data = await userModel.find({username: username});
 
-        if (data == "user found"){
+        if (data != ""){
             return res.json({msg: "Username already in use", status: false});
         }
 
@@ -31,22 +30,24 @@ var register = async (req,res,next) => {
 var login = async (req,res,next) => {
     try {
         const {username, password} = req.body;
+        const user = await userModel.find({username: username});
 
-        const user = await User.findOne({ username });
-        if (!user)
+        if (user == ""){
             return res.json({msg: "Incorrect username or password", status: false});
+        }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid = await bcrypt.compare(password, user[0].password);
 
-        if (!isPasswordValid)
+        if (!isPasswordValid){
             return res.json({msg: "Incorrect username or password", status: false});
+        }
 
         delete user.password;
-
         return res.json({ status: true, user });
     } 
-    catch(ex) {
-        next(ex);
+    catch(err) {
+        console.log(err.message);
+        next(err);
     }
 };
 

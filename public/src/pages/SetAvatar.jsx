@@ -7,7 +7,7 @@ import axios from "axios"
 import { SetAvatarRoute } from "../utils/APIRoutes";
 import loader from "../assets/loader.gif";
 
-export default function SetAvatar() {
+function SetAvatar() {
     const api = 'https://api.multiavatar.com/45678945';
     const navigate = useNavigate();
     const [avatars, setAvatars] = useState([]);
@@ -16,11 +16,13 @@ export default function SetAvatar() {
     const toastOptions = {
         position: 'bottom-right',
         autoClose: 8000,
-        pauseOnHover: true,
-        draggable: true,
+        pauseOnHover: false,
+        draggable: false,
         theme: "dark",
     }
+
     const setProfilePicture = async () => {};
+
     useEffect( async() => {
         const data = [];
         for(let i = 0; i < 4; i ++)
@@ -55,8 +57,30 @@ export default function SetAvatar() {
                 })
             }</div>
         </Container>
-        ;
         <ToastContainer/>
         </>
     )
 }
+
+const Container =  styled.div`
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+  background-color: #26184a;
+  .container {
+    height: 85vh;
+    width: 85vw;
+    background-color: #1d1238;
+    display: grid;
+    grid-template-columns: 25% 75%;
+    @media screen and (min-width:720px) and (max-width:1080px) {
+      grid-template-columns: 35% 65%;
+    }
+  }
+`;
+
+export default SetAvatar;

@@ -27,42 +27,40 @@ function Login() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // alert("form");
+        toast.dismiss();
+
         if (handleValidation()) {
-            console.log("in validation", loginRoute);
             const { username, password } = values;
-                const { data } = await axios.post(loginRoute, {
-                    username,
-                    password,
-                });
+            const { data } = await axios.post(loginRoute, {
+                username,
+                password
+            });
+                
             if (data.status === false) {
                 toast.error(data.msg, toastOptions);
             }
+
             if (data.status === true) {
-                localStorage.setItem('chat-app-user', JSON.stringify(data.user))
-                navigate("/");
+                console.log("Successful Login");
+                // localStorage.setItem('chat-app-user', JSON.stringify(data.user))
+                // navigate("/");
             }
         }
     };
 
     const handleValidation =() => {
         const { password, username } = values;
-        if (password === "") {
+        var valid = true;
+
+        if (password === "" || username === "") {
             toast.error(
                 "Username and Password is required.",
                 toastOptions
             );
-            return false;
-        }
-        else if (username === "") {
-            toast.error(
-                "Username and Password is required.",
-                toastOptions
-            );
-            return false;
+            valid = false;
         }
 
-        return true;
+        return valid;
     }
 
     const handleChange = (event) => {

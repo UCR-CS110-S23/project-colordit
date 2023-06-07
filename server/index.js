@@ -15,17 +15,6 @@ const db = mongoose.connection;
 db.on("error", (err) => console.log(err));
 db.once("open", () => console.log("Connected to Database"));
 
-app.get('/username', async (req, res) => {
-    var query = await userModel.find({username: req.query.username});
-
-    if(query == ""){
-        res.json("user not found");
-    }
-    else{
-        res.json("user found");
-    }
-});
-
 app.listen(process.env.PORT, () => {
     console.log(`Server started on port ${process.env.PORT}`);
 });
