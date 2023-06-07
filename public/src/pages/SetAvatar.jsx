@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer,toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import axios from "axios"
+import { Buffer } from 'buffer';
 import { setAvatarRoute } from "../utils/APIRoutes";
 import loader from "../assets/loader.gif";
 
@@ -11,8 +12,8 @@ function SetAvatar() {
     const api = 'https://api.multiavatar.com/45678945';
     const navigate = useNavigate();
     const [avatars, setAvatars] = useState([]);
-    const [isLoading, setIsLoading] = useState([true]);
-    const [selectedAvatar, setSelectedAvatar] = useState([undefined]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [selectedAvatar, setSelectedAvatar] = useState(undefined);
     const toastOptions = {
         position: 'bottom-right',
         autoClose: 8000,
@@ -23,7 +24,7 @@ function SetAvatar() {
 
     const setProfilePicture = async () => {};
 
-    useEffect( async() => {
+    useEffect( async () => {
         const data = [];
         for(let i = 0; i < 4; i++)
         {
@@ -40,19 +41,21 @@ function SetAvatar() {
     return (
         <>
         <Container>
-            <div className='title-conatiner'>
+            <div className="title-container">
                 <h1>Pick avatar for Profile Picture</h1>
             </div>
-            <div className='avatars'>{
+            <div className="avatars">{
                 avatars.map((avatar, index) => {
                     return (
                         <div 
                             key = {index}
-                            className={`avatar ${selectedAvatar === index ? "selected" : "" }`}
+                            className={`avatar ${selectedAvatar === index ? "selected" : "" 
+                        }`}
                         >
                             <img src={`data:image/svg+xml;base64,${avatar}`} alt="avatar"
                             onClick={() => setSelectedAvatar(index)}
                             />
+                            "jfdsfjdnsfndsjk"
                         </div>
                     )
                 })
