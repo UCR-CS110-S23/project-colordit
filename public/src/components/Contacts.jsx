@@ -68,8 +68,8 @@ const Container = styled.div`
   .brand {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 1rem;
+    justify-content: center;
     img {
       height: 2rem;
     }
@@ -83,7 +83,7 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
     overflow: auto;
-    gap: 0.8rem,
+    gap: 0.8rem;
     &::-webkit-scrollbar {
       width: 0.2rem;
       &-thumb {
@@ -91,18 +91,18 @@ const Container = styled.div`
         width: 0.1rem;
         border-radius: 1rem;
       }
-    };
+    }
     .contact {
-      background-color: #ffffff39;
+      background-color: #ffffff34;
       min-height: 5rem;
-      width: 90%;
       cursor: pointer;
+      width: 90%;
       border-radius: 0.2rem;
       padding: 0.4rem;
+      display: flex;
       gap: 1rem;
       align-items: center;
-      display: flex;
-      transitionL 0.5s ease-in-out;
+      transition: 0.5s ease-in-out;
       .avatar {
         img {
           height: 3rem;
@@ -115,9 +115,10 @@ const Container = styled.div`
       }
     }
     .selected {
-      background-color: #9186f3
+      background-color: #9a86f3;
     }
   }
+
   .current-user {
     background-color: #0d0d30;
     display: flex;
@@ -135,7 +136,7 @@ const Container = styled.div`
         color: white;
       }
     }
-    @media screen and (min-width:720px) and (max-width:1080px) {
+    @media screen and (min-width: 720px) and (max-width: 1080px) {
       gap: 0.5rem;
       .username {
         h2 {

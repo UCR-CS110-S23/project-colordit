@@ -2,6 +2,7 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const fetch = require("node-fetch");
 
+
 var register = async (req,res,next) => {
     try {
         const username = req.body.username;
@@ -82,6 +83,27 @@ var getAllUsers = async (req, res, next) => {
         next(ex);
     }
 };
+
+var setAvatar = async (req, res, next) => {
+    try {
+      const userId = req.params.id;
+      const avatarImage = req.body.image;
+      const userData = await User.findByIdAndUpdate(
+        userId,
+        {
+          isAvatarImageSet: true,
+          avatarImage,
+        },
+        { new: true }
+      );
+      return res.json({
+        isSet: userData.isAvatarImageSet,
+        image: userData.avatarImage,
+      });
+    } catch (ex) {
+      next(ex);
+    }
+  };
 
 module.exports.register = register;
 module.exports.login = login;
