@@ -21,7 +21,7 @@ const Container = styled.div`
     flex-direction: column;
     color: white;
     img {
-        height: 20rem;
+        height: 10rem;
     }
     span {
         color: #4e00ff;
