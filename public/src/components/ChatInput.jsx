@@ -6,23 +6,23 @@ import {BsEmojiSmileFill} from "react-icons/bs"
 
 export default function ChatInput({handleSendMessage}) {
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [message, setMessage] = useState("");
+    const [msg, setMsg] = useState("");
 
     const handleEmojiPickerHideShow = () => {
         setShowEmojiPicker(!showEmojiPicker);
     }
 
     const handleEmojiClick = (event, emoji) => {
-        let message = message;
+        let message = msg;
         message += emoji.emoji;
-        setMessage(message);
+        setMsg(message);
     }
 
     const sendChat = (event) => {
         event.preventDefault();
-        if (message.length > 0) {
-            handleSendMessage(message);
-            setMessage('');
+        if (msg.length > 0) {
+            handleSendMessage(msg);
+            setMsg('');
         }
     }
 
@@ -31,12 +31,12 @@ export default function ChatInput({handleSendMessage}) {
     <div className="button-container">
         <div className="emoji">
             <BsEmojiSmileFill onClick={handleEmojiPickerHideShow}/> {
-                showEmojiPicker && <Picker  onEmojiClick={handleEmojiPickerHideShow}/>
+                showEmojiPicker && <Picker  onEmojiClick={handleEmojiClick}/>
             }
         </div>
     </div>
     <form className='input-container' onSubmit={(e)=>sendChat(e)}>
-        <input type='text' placeholder='type message' value={message} onChange={(e) => setMessage(e.target.value)}/>
+        <input type='text' placeholder='type message' onChange={(e) => setMsg(e.target.value)} value={msg}/>
         <button className='submit'>
             <IoMdSend />
         </button>
