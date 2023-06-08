@@ -4,24 +4,19 @@ import ChatInput from './ChatInput';
 import Messages from "./Messages"
 import axios from 'axios';
 import Logout from './Logout';
-import { recieveMessageRoute, sendMessageRoute } from '../utils/APIRoutes';
+import { getAllMessagesRoute, recieveMessageRoute, sendMessageRoute } from '../utils/APIRoutes';
 import { v4 as uuidv4 } from "uuid";
 
 
-export default function ChatContainer({currentChat, currentUser}) {
+function ChatContainer({currentChat, currentUser}) {
     const [messages, setMessages] = useState([]);
-const scrollRef = useRef();
-const [arrivalMessage, setArrivalMessage] = useState(null);
-
-
+    const [arrivalMessage, setArrivalMessage] = useState(null);
+    const scrollRef = useRef();
 
 useEffect(() => {
     (async () => {
-        const data = await JSON.parse(
-            localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-          );
-          const response = await axios.post(recieveMessageRoute, {
-            from: data._id,
+          const response = await axios.post(getAllMessagesRoute, {
+            from: currentUser._id,
             to: currentChat._id,
           });
           setMessages(response.data);
@@ -46,26 +41,27 @@ useEffect(() => {
         await axios.post(sendMessageRoute, {
           from: currentUser._id,
           to: currentChat._id,
-          message: msg,
-    });
-    const msgs = [...messages];
-    msgs.push({ fromSelf: true, message: msg });
-    setMessages(msgs);
-  };
-
-
-  return (
+          message: msg
+        });
         
+        const msgs = [...messages];
+        msgs.push({ fromSelf: true, message: msg });
+        setMessages(msgs);
+    };
+
+
+    return (
+        <>
             currentChat && (
                 <Container>
                     <div className="chat-header">
                         <div className="user-details">
                             <div className="avatar">
-                                <img src={`data:image/svg+xml;base64,${currentChat.avatarImage}`} alt='avatar' />
+                                {/* <img src={`data:image/svg+xml;base64,${currentChat.avatarImage}`} alt='avatar' /> */}
                             </div>
                             <div className="username">
                                 <h3>
-                                    {currentChat.username}
+                                    {/* {currentChat.username} */}
                                 </h3>
                             </div>
                         </div>
@@ -73,7 +69,7 @@ useEffect(() => {
                     <div className='chat-messages'>
                         {messages.map((message) => {
                         return (
-                            <div ref={scrollRef} key={uuidv4()}>
+                            <div>
                             <div
                                 className={`message ${
                                 message.fromSelf ? "sended" : "recieved"
@@ -90,6 +86,7 @@ useEffect(() => {
                     <ChatInput handleSendMessage={handleSendMsg}/>
                 </Container>
             )
+        </>
     );
 }
 
@@ -166,3 +163,5 @@ const Container = styled.div`
     }
 
 `;
+
+export default ChatContainer;

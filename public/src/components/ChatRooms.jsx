@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
 import { chatRoomRoute } from '../utils/APIRoutes';
+import { getAllChatRoomsRoute } from '../utils/APIRoutes';
 import axios from "axios";
 import { ToastContainer,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,7 +12,8 @@ function ChatRooms({currentUser, changeChat}) {
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
   const [showChatForm, setShowChatForm] = useState(true);
-  const [chatRoomName,setchatRoomName] = useState("");
+  const [chatRoomName, setChatRoomName] = useState("");
+  const [chatRooms,  setChatRooms] = useState([]);
 
   const toastOptions = {
     position: 'bottom-right',
@@ -25,8 +27,54 @@ function ChatRooms({currentUser, changeChat}) {
     if (currentUser) {
       setCurrentUserImage(currentUser.avatarImage);
       setCurrentUserName(currentUser.username);
+      console.log('hi');
     }
   },[currentUser]);
+
+  useEffect(() => {
+    (async() => {
+      // setChatRooms([]);
+      const { data } = await axios.get(getAllChatRoomsRoute);
+      // console.log(data.chatRooms);
+
+      // console.log(data.chatRooms.length)
+
+      for(var i = 0; i < data.chatRooms.length; i++){
+        // var newChatRoom = document.createElement('div');
+        // newChatRoom.id = data.chatRooms[i]._id;
+        // newChatRoom.className = 'chatRoom';
+        // newChatRoom.innerHTML = data.chatRooms[i].name;
+
+        /*newChatRoom.addEventListener('click', function(){
+          const allChatRooms = document.getElementsByClassName('chatRoom');
+          
+          for(var j = 0; j < allChatRooms.length; j++){
+            allChatRooms[j].style.backgroundColor = 'white';
+          }
+
+          const selectedChatRoom = document.getElementById(data.chatRooms[i]._id);
+          // console.log("room", allChatRooms);
+          selectedChatRoom.style.backgroundColor = 'blue';
+        });*/
+
+        var newChatRoom = {
+          name: data.chatRooms[i].name,
+          _id: data.chatRooms[i]._id
+        }
+
+        // console.log("chat room contents", chatRooms);
+        // console.log("Check", chatRooms.find(room => room.data.chatRooms[i]._id === data.chatRooms[i]._id));
+
+        // if(chatRooms.find(room => room.data.chatRooms[i]._id === data.chatRooms[i]._id) == undefined){
+        //   console.log(newChatRoom);
+          setChatRooms(chatRooms.push(newChatRoom));
+        //   console.log("here",chatRooms);
+        // }
+      }
+
+      console.log("HERE",chatRooms);
+    })();
+  },[]);
 
   const changeCurrentChat = (index, chatRoom) => {
     setCurrentSelected(index);
@@ -48,6 +96,14 @@ function ChatRooms({currentUser, changeChat}) {
         document.getElementById('chat-form-submit').click();
       }
     });
+
+    document.getElementById('chat-room-name').focus();
+
+    // document.getElementById('chat-room-name').addEventListener('focusout', function(event){
+    //   document.getElementById('chat-form').hidden = true;
+    //   setShowChatForm(true);
+    //   document.getElementById('chat-room-name').value = "";
+    // });
   }
 
   const handleSubmit = async (event) => {
@@ -65,8 +121,14 @@ function ChatRooms({currentUser, changeChat}) {
         toast.error(data.msg, toastOptions);
       }
       else {
-        var newChatRoom = document.createElement('h3');
-        newChatRoom.innerHTML = chatRoomName ;   
+        var newChatRoom = document.createElement('div');
+        console.log(data.chatRoom._id);
+        newChatRoom.id = data.chatRoom._id;
+        newChatRoom.className = 'chatRoom';
+        newChatRoom.innerHTML = chatRoomName;
+        newChatRoom.addEventListener('click', function(){
+          newChatRoom.style.backgroundColor = 'blue';
+        }); 
         document.getElementById("chat-rooms").appendChild(newChatRoom);
       }
     }
@@ -95,7 +157,7 @@ function ChatRooms({currentUser, changeChat}) {
   }
 
   const handleChange = (event) => {
-    setchatRoomName(event.target.value);
+    setChatRoomName(event.target.value);
   }
 
   return (
@@ -172,7 +234,7 @@ const Container = styled.div`
     button{
       background-color: #997af0;
       color: white;
-      width: 100%;
+      width: 80%;
       padding: 10px;
       border: none;
       font-weight: bold;
@@ -186,7 +248,21 @@ const Container = styled.div`
       }
     }
   }
-  
+
+  input{
+    background-color: black;
+    padding: 1rem;
+    border: 0.1rem solid #4e0eff;
+    border-radius: 0.4rem;
+    color: white;
+    width: 100%;
+    font-size: 1rem;
+    &:focus {
+        border: 0.1rem solid #997af0;
+        outline: none;
+    }
+  }
+
   #chat-rooms {
     display: flex;
     flex-direction: column;
@@ -213,8 +289,11 @@ const Container = styled.div`
       align-items: center;
       transition: 0.5s ease-in-out;
     }
-    .selected {
+    .chatRoom:hover {
       background-color: #9a86f3;
+    }
+    .chatRoom:selected {
+      background-color: black;
     }
   }
 

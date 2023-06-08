@@ -9,11 +9,11 @@ var chatRoom = async (req,res,next) => {
             return res.json({msg: "Chat room name already in use", status: false});
         }
 
-        const user = await chatRoomModel.create({
+        const chatRoom = await chatRoomModel.create({
             name: chatRoomName
         });
 
-        return res.json({status:true});
+        return res.json({status:true, chatRoom});
     } 
     catch(err) {
         console.log(err.message);
@@ -21,4 +21,18 @@ var chatRoom = async (req,res,next) => {
     }
 };
 
+var getAllChatRooms = async (req, res, next) => {
+    try {
+        console.log("here");
+        const chatRooms = await chatRoomModel.find()
+        console.log(chatRooms);
+        
+        return res.json({status:true, chatRooms});
+    } 
+    catch (ex) {
+        next(ex);
+    }
+};
+
 module.exports.chatRoom = chatRoom;
+module.exports.getAllChatRooms = getAllChatRooms;
