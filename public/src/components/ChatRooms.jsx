@@ -13,7 +13,7 @@ function ChatRooms({currentUser, changeChat}) {
   const [currentSelected, setCurrentSelected] = useState(undefined);
   const [showChatForm, setShowChatForm] = useState(true);
   const [chatRoomName, setChatRoomName] = useState("");
-  const [chatRooms,  setChatRooms] = useState([]);
+  const [allChatRooms,  setAllChatRooms] = useState([]);
 
   const toastOptions = {
     position: 'bottom-right',
@@ -27,22 +27,18 @@ function ChatRooms({currentUser, changeChat}) {
     if (currentUser) {
       setCurrentUserImage(currentUser.avatarImage);
       setCurrentUserName(currentUser.username);
-      console.log('hi');
     }
   },[currentUser]);
 
   useEffect(() => {
     (async() => {
-      // setChatRooms([]);
       const { data } = await axios.get(getAllChatRoomsRoute);
-      // console.log(data.chatRooms);
-
-      // console.log(data.chatRooms.length)
+      var chatRoomArr = [];
 
       for(var i = 0; i < data.chatRooms.length; i++){
         // var newChatRoom = document.createElement('div');
         // newChatRoom.id = data.chatRooms[i]._id;
-        // newChatRoom.className = 'chatRoom';
+        // newChatRoom.className = 'chat-room';
         // newChatRoom.innerHTML = data.chatRooms[i].name;
 
         /*newChatRoom.addEventListener('click', function(){
@@ -62,26 +58,23 @@ function ChatRooms({currentUser, changeChat}) {
           _id: data.chatRooms[i]._id
         }
 
-        // console.log("chat room contents", chatRooms);
-        // console.log("Check", chatRooms.find(room => room.data.chatRooms[i]._id === data.chatRooms[i]._id));
-
-        // if(chatRooms.find(room => room.data.chatRooms[i]._id === data.chatRooms[i]._id) == undefined){
-        //   console.log(newChatRoom);
-          setChatRooms(chatRooms.push(newChatRoom));
-        //   console.log("here",chatRooms);
+        chatRoomArr.push(newChatRoom);
+        // if(allChatRooms.find(({ _id }) => _id === data.chatRooms[i]._id) == undefined){
+          // console.log(newChatRoom);
+          // setAllChatRooms([...allChatRooms, newChatRoom]);
+          
         // }
       }
+      setAllChatRooms([...allChatRooms, chatRoomArr]);
+      // setAllChatRooms(allChatRooms.push(chatRoomArr));
 
-      console.log("HERE",chatRooms);
+      console.log(allChatRooms);
     })();
   },[]);
 
-  const changeCurrentChat = (index, chatRoom) => {
-    setCurrentSelected(index);
-    changeChat(chatRoom);
-  }
-
   const createChatroom = () => {
+    console.log("HERE", allChatRooms)
+    console.log(allChatRooms);
     setShowChatForm(!showChatForm);
 
     if(showChatForm){
@@ -122,13 +115,13 @@ function ChatRooms({currentUser, changeChat}) {
       }
       else {
         var newChatRoom = document.createElement('div');
-        console.log(data.chatRoom._id);
         newChatRoom.id = data.chatRoom._id;
-        newChatRoom.className = 'chatRoom';
+        newChatRoom.className = 'chat-room';
         newChatRoom.innerHTML = chatRoomName;
-        newChatRoom.addEventListener('click', function(){
-          newChatRoom.style.backgroundColor = 'blue';
-        }); 
+        newChatRoom.addEventListener('click', (event) => {
+          chatUpdate(event);
+          changeCurrentChat(event.target.id);
+        });
         document.getElementById("chat-rooms").appendChild(newChatRoom);
       }
     }
@@ -160,6 +153,23 @@ function ChatRooms({currentUser, changeChat}) {
     setChatRoomName(event.target.value);
   }
 
+  const changeCurrentChat = (chatRoom) => {
+    setCurrentSelected(chatRoom);
+    changeChat(chatRoom);
+  }
+
+  const chatUpdate = (event) => {
+    const chatRooms = document.getElementsByClassName('chat-room');
+
+    for(var i = 0; i < chatRooms.length; i++){
+      chatRooms[i].style.backgroundColor = '#ffffff34';
+    }
+
+    const selectedChatRoom = document.getElementById(event.target.id);
+    selectedChatRoom.style.backgroundColor = 'white';
+    changeCurrentChat(event.target.id);
+  }
+
   return (
     <>
       {
@@ -181,6 +191,22 @@ function ChatRooms({currentUser, changeChat}) {
                 />
                 <input id='chat-form-submit' type="submit" hidden='hidden'/>
               </form>
+              {allChatRooms.length > 0 ? 
+                (<>
+                  {allChatRooms[0].map((chatRoom, index) => {
+                    return(
+                      <div
+                        key={index}
+                        className='chat-room'
+                        id={chatRoom._id}
+                        onClick={(event) => {chatUpdate(event)}}
+                      >
+                        {chatRoom.name}
+                      </div>
+                    );
+                  })}
+                </>) : (<></>)
+              }
             </div>
             <div className="current-user">
               <div className="avatar">
@@ -277,7 +303,7 @@ const Container = styled.div`
         border-radius: 1rem;
       }
     }
-    .chatRoom {
+    .chat-room {
       background-color: #ffffff34;
       min-height: 5rem;
       cursor: pointer;
@@ -289,11 +315,8 @@ const Container = styled.div`
       align-items: center;
       transition: 0.5s ease-in-out;
     }
-    .chatRoom:hover {
+    .chat-room:hover {
       background-color: #9a86f3;
-    }
-    .chatRoom:selected {
-      background-color: black;
     }
   }
 
