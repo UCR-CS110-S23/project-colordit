@@ -62,7 +62,7 @@ var setAvatar = async (req,res,next) => {
             avatarImage: avatarImage
         });
         
-        return res.json({isSet: true, image: user.avatarImage})
+        return res.json({isSet: true, image: avatarImage});
     }
     catch(err){
         console.log(err.message);
@@ -72,11 +72,13 @@ var setAvatar = async (req,res,next) => {
 
 var getAllUsers = async (req, res, next) => {
     try {
-        const users = await User.find({_id: { $ne:req.params.id } }).select([
+        const users = await userModel.find({_id: req.params.id}).select([
             "username",
             "avatarImage",
             "_id"
         ]);
+
+        console.log(users);
         return res.json(users);
     } 
     catch (ex) {

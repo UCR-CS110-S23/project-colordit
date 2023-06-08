@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import { allUsersRoute } from '../utils/APIRoutes';
-import Contacts from '../components/Contacts';
+import ChatRooms from '../components/ChatRooms';
 import Welcome from '../components/Welcome';
 import ChatContainer from '../components/ChatContainer';
 
@@ -24,14 +24,16 @@ function Chat() {
         setIsLoaded(true);
       }
     }
+
     fetchData();
   },[]);
+  
   // useEffect(() => {
   //   const fetchContacts = async() => {
   //     if(currentUser) {
   //       if(currentUser.isAvatarImageSet) {
   //         const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-  //         setContacts(data.data);
+  //         setContacts(contacts.push(data.data[0]));
   //       }
   //       else {
   //         navigate("/setAvatar");
@@ -48,11 +50,11 @@ function Chat() {
   return (
     <Container>
       <div className="container">
-        <Contacts contacts={contacts} currentUser={currentUser} changeChat={handleChatChange}/>
+        <ChatRooms currentUser={currentUser} changeChat={handleChatChange}/>
         {isLoaded && currentChat === undefined ? (
           <Welcome currentUser={currentUser}/>
           ) : (
-             <ChatContainer currentChat={currentChat} /> 
+             <ChatContainer currentChat={currentChat}/> 
             )
         }
       </div>

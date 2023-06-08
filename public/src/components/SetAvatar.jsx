@@ -56,6 +56,7 @@ function SetAvatar() {
 
       if (data.isSet) {
         user.isAvatarImageSet = true;
+        console.log(data);
         user.avatarImage = data.image;
 
         localStorage.setItem(
