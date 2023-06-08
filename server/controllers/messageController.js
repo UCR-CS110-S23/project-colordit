@@ -2,7 +2,7 @@
 const Messages = require("../models/messageModel");
 
 // Handling the getMessages request
-module.exports.getMessages = async (req, res, next) => {
+module.exports.getAllMessages = async (req, res, next) => {
   try {
     // Extracting 'from' and 'to' from the request body
     const { from, to } = req.body;
