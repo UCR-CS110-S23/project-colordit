@@ -75,6 +75,7 @@ const Container =  styled.div`
     height: 85vh;
     width: 85vw;
     background-color: #1d1238;
+    border-radius: 15px;
     display: grid;
     grid-template-columns: 25% 75%;
     @media screen and (min-width:720px) and (max-width:1080px) {

@@ -1,7 +1,5 @@
 const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
-const fetch = require("node-fetch");
-
 
 var register = async (req,res,next) => {
     try {

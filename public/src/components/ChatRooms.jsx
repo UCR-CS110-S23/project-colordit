@@ -1,11 +1,25 @@
 import React, {useEffect, useState} from 'react'
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
+import { chatRoomRoute } from '../utils/APIRoutes';
+import axios from "axios";
+import { ToastContainer,toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ChatRooms({currentUser, changeChat}) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
+  const [showChatForm, setShowChatForm] = useState(true);
+  const [chatRoomName,setchatRoomName] = useState("");
+
+  const toastOptions = {
+    position: 'bottom-right',
+    autoClose: 8000,
+    pauseOnHover: false,
+    draggable: false,
+    theme: "dark",
+}
 
   useEffect(() => {
     if (currentUser) {
@@ -19,6 +33,71 @@ function ChatRooms({currentUser, changeChat}) {
     changeChat(chatRoom);
   }
 
+  const createChatroom = () => {
+    setShowChatForm(!showChatForm);
+
+    if(showChatForm){
+      document.getElementById('chat-form').hidden = false;
+    }
+    else{
+      document.getElementById('chat-form').hidden = true;
+    }
+
+    document.getElementById('chat-form-submit').addEventListener("keypress", function(event){
+      if(event.key === "Enter"){
+        document.getElementById('chat-form-submit').click();
+      }
+    });
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    toast.dismiss();
+
+    if (await handleValidation()) {
+      document.getElementById('chat-room-name').value = "";
+      document.getElementById('chat-form').hidden = true;
+      setShowChatForm(true);
+      
+      const { data } = await axios.post(chatRoomRoute, {chatRoomName});
+
+      if(data.status === false){
+        toast.error(data.msg, toastOptions);
+      }
+      else {
+        var newChatRoom = document.createElement('h3');
+        newChatRoom.innerHTML = chatRoomName ;   
+        document.getElementById("chat-rooms").appendChild(newChatRoom);
+      }
+    }
+  }
+
+  const handleValidation = async () => {
+    var valid = true;
+    
+    if (chatRoomName.length < 3) {
+      toast.error(
+          "Chat room name should be at least 3 characters.",
+          toastOptions
+      );
+      valid =  false;
+    }
+
+    if (chatRoomName.length > 20) {
+      toast.error(
+          "Chat room name should be less than 20 characters.",
+          toastOptions
+      );
+      valid =  false;
+    }
+
+    return valid;
+  }
+
+  const handleChange = (event) => {
+    setchatRoomName(event.target.value);
+  }
+
   return (
     <>
       {
@@ -29,16 +108,17 @@ function ChatRooms({currentUser, changeChat}) {
                 <img src={Logo} alt='logo' />
                 <h3>colordit chat</h3>
               </div>
-              <button>New Chat Room</button>
+              <button onClick={() => createChatroom()}>New Chat Room</button>
             </div>
-            <div className='chat-rooms'>
-            <h3>hello</h3>
-              <h3>hello</h3>
-              <h3>hello</h3>
-              <h3>hello</h3>
-              <h3>hello</h3>
-              <h3>hello</h3>
-              <h3>hello</h3>
+            <div id='chat-rooms'>
+              <form id='chat-form' hidden='hidden' onSubmit={(event)=>handleSubmit(event)}>
+                <input id='chat-room-name' 
+                      type='text' 
+                      placeholder='Chat Room Name'
+                      onChange={(event) => handleChange(event)}
+                />
+                <input id='chat-form-submit' type="submit" hidden='hidden'/>
+              </form>
             </div>
             <div className="current-user">
               <div className="avatar">
@@ -50,6 +130,7 @@ function ChatRooms({currentUser, changeChat}) {
                 </h2>
               </div>
             </div>
+            <ToastContainer />
           </Container>
         )
       }
@@ -64,11 +145,16 @@ const Container = styled.div`
   overflow: hidden;
   background-color: #301e45;
   border: 5px solid #1d1238;
+  border-radius: 15px;
+  // justify-content: center;
+  // align-items: center;
+
   .header{
     display:flex;
     flex-direction:column;
     justify-content: center;
     align-items:center;
+    // width: 100%;
     .brand {
       margin-bottom: 15px;
       display: flex;
@@ -86,7 +172,7 @@ const Container = styled.div`
     button{
       background-color: #997af0;
       color: white;
-      width: 70%;
+      width: 100%;
       padding: 10px;
       border: none;
       font-weight: bold;
@@ -101,7 +187,7 @@ const Container = styled.div`
     }
   }
   
-  .chat-rooms {
+  #chat-rooms {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -126,16 +212,6 @@ const Container = styled.div`
       gap: 1rem;
       align-items: center;
       transition: 0.5s ease-in-out;
-      .avatar {
-        img {
-          height: 3rem;
-        }
-      }
-      .username {
-        h3 {
-          color: white;
-        }
-      }
     }
     .selected {
       background-color: #9a86f3;
@@ -143,10 +219,12 @@ const Container = styled.div`
   }
 
   .current-user {
-    background-color: #0d0d30;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #0d0d30;
+    // border-radius: 15px;
+    // width: 90%;
     gap: 2rem;
     .avatar {
       img {
