@@ -22,4 +22,4 @@
 
 > run `yarn start`
 
-We are referencing this youtube video: https://youtu.be/otaQKODEUFs
+We are referencing this youtube video for general UI structue: https://youtu.be/otaQKODEUFs
