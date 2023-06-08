@@ -68,23 +68,6 @@ var setAvatar = async (req,res,next) => {
     }
 };
 
-var getAllUsers = async (req, res, next) => {
-    try {
-        const users = await userModel.find({_id: req.params.id}).select([
-            "username",
-            "avatarImage",
-            "_id"
-        ]);
-
-        console.log(users);
-        return res.json(users);
-    } 
-    catch (ex) {
-        next(ex);
-    }
-};
-
 module.exports.register = register;
 module.exports.login = login;
 module.exports.setAvatar = setAvatar;
-module.exports.getAllUsers = getAllUsers;
