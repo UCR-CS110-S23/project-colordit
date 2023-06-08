@@ -8,12 +8,10 @@ import { getAllMessagesRoute, recieveMessageRoute, sendMessageRoute } from '../u
 import { v4 as uuidv4 } from "uuid";
 
 
-export default function ChatContainer({currentChat, currentUser}) {
+function ChatContainer({currentChat, currentUser}) {
     const [messages, setMessages] = useState([]);
-const scrollRef = useRef();
-const [arrivalMessage, setArrivalMessage] = useState(null);
-
-
+    const [arrivalMessage, setArrivalMessage] = useState(null);
+    const scrollRef = useRef();
 
 useEffect(() => {
     (async () => {
@@ -25,31 +23,45 @@ useEffect(() => {
     })();
   }, [currentChat]);
 
+  useEffect(() => {
+    (async () => {
+        const getCurrentChat = async () => {
+            if (currentChat) {
+              await JSON.parse(
+                localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
+              )._id;
+            }
+          };
+          getCurrentChat();
+    })();
+  }, [currentChat]);
+
 
     const handleSendMsg = async (msg) => {
         await axios.post(sendMessageRoute, {
           from: currentUser._id,
           to: currentChat._id,
-          message: msg,
-    });
-    const msgs = [...messages];
-    msgs.push({ fromSelf: true, message: msg });
-    setMessages(msgs);
-  };
-
-
-  return (
+          message: msg
+        });
         
+        const msgs = [...messages];
+        msgs.push({ fromSelf: true, message: msg });
+        setMessages(msgs);
+    };
+
+
+    return (
+        <>
             currentChat && (
                 <Container>
                     <div className="chat-header">
                         <div className="user-details">
                             <div className="avatar">
-                                <img src={`data:image/svg+xml;base64,${currentChat.avatarImage}`} alt='avatar' />
+                                {/* <img src={`data:image/svg+xml;base64,${currentChat.avatarImage}`} alt='avatar' /> */}
                             </div>
                             <div className="username">
                                 <h3>
-                                    {currentChat.username}
+                                    {/* {currentChat.username} */}
                                 </h3>
                             </div>
                         </div>
@@ -74,6 +86,7 @@ useEffect(() => {
                     <ChatInput handleSendMessage={handleSendMsg}/>
                 </Container>
             )
+        </>
     );
 }
 
@@ -150,3 +163,5 @@ const Container = styled.div`
     }
 
 `;
+
+export default ChatContainer;

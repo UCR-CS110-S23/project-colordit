@@ -1,15 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const userModel = require("./models/userModel");
 const userRoutes = require("./routes/userRoutes");
+const chatRoomRoutes = require("./routes/chatRoomRoutes");
 const messageRoutes = require("./routes/messagesRoutes");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/auth", userRoutes);
-app.use("/api/messages", messageRoutes);
+// app.use("/api/messages", messageRoutes);
 require("dotenv").config();
 
 mongoose.connect(process.env.MONGO_URI);
