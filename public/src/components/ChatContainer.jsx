@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef }from 'react'
 import styled from "styled-components"
 import ChatInput from './ChatInput';
-import Messages from "./Messages"
 import axios from 'axios';
 import Logout from './Logout';
 import { getAllMessagesRoute, recieveMessageRoute, sendMessageRoute } from '../utils/APIRoutes';
