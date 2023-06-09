@@ -41,18 +41,12 @@ function ChatContainer({currentChat, currentUser, socket}) {
           message: msg
         });
 
-        socket.current.emit("send-msg", {
+        await socket.current.emit("send-msg", {
             to: currentChat,
             from: currentUser._id,
             message: msg,
         }); 
-        
-        const msgs = [...messages];
-        msgs.push(msg);
-        setMessages(msgs);
-    };
 
-    useEffect(() => {
         console.log("current", socket.current);
         if (socket.current) {
             console.log("success");
@@ -63,7 +57,24 @@ function ChatContainer({currentChat, currentUser, socket}) {
         else {
             console.log("no current");
         }
-    }, []);
+        
+        const msgs = [...messages];
+        msgs.push(msg);
+        setMessages(msgs);
+    };
+
+    // useEffect(() => {
+    //     console.log("current", socket.current);
+    //     if (socket.current) {
+    //         console.log("success");
+    //         socket.current.on("msg-received", (msg) => {
+    //             setArrivalMessage({fromSelf:false, message: msg});
+    //         });
+    //     }
+    //     else {
+    //         console.log("no current");
+    //     }
+    // }, [socket.current]);
 
     useEffect(() => {
         arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);

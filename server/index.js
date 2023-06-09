@@ -42,10 +42,10 @@ io.on("connection", (socket) => {
     });
 
     socket.on("send-msg", (data) => {
-        const sendUserSocket = data;
-        if(sendUserSocket) {
-            console.log("data.message", data.message);
-            socket.to(sendUserSocket).emit("msg-received", data.message);
-        }
+        // const sendUserSocket = chatGroups;
+        chatGroups.forEach((socketId) => {
+            console.log(socketId);
+            socket.to(socketId).emit("msg-received", data.message)
+        })
     });
 });
