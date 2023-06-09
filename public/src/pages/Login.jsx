@@ -35,7 +35,7 @@ function Login() {
         event.preventDefault();
         toast.dismiss();
 
-        if (handleValidation()) {
+        if (await handleValidation()) {
             const { username, password } = values;
             const { data } = await axios.post(loginRoute, {
                 username,
@@ -45,9 +45,9 @@ function Login() {
             if (data.status === false) {
                 toast.error(data.msg, toastOptions);
             }
-
-            if (data.status === true) {
-                localStorage.setItem('chat-app-user', JSON.stringify(data.user))
+            else {
+                console.log(data.user);
+                localStorage.setItem('chat-app-user', JSON.stringify(data.user));
                 navigate("/");
             }
         }

@@ -23,13 +23,12 @@ var chatRoom = async (req,res,next) => {
 
 var getAllChatRooms = async (req, res, next) => {
     try {
-        console.log("here");
-        const chatRooms = await chatRoomModel.find()
-        console.log(chatRooms);
+        const chatRooms = await chatRoomModel.find();
         
         return res.json({status:true, chatRooms});
     } 
     catch (ex) {
+        console.log(err.message);
         next(ex);
     }
 };

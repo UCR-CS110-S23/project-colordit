@@ -1,30 +1,24 @@
-// Importing the Mongoose library
 const mongoose = require("mongoose");
 
-// Creating the MessageSchema
 const MessageSchema = mongoose.Schema(
   {
-    // Defining the message field
     message: {
-      text: { type: String, required: true },
+      type: String, 
+      required: true
     },
-
-    // Defining the users field
-    users: Array,
-
-    // Defining the sender field
-    sender: {
+    room: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+      required: true
     },
-  },
-
-  // Adding timestamps to the schema
-  {
-    timestamps: true,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true
+    },
+    timestamp: {
+      type: Date,
+      default: Date.now
+    }
   }
 );
 
-// Exporting the Messages model
-module.exports = mongoose.model("Messages", MessageSchema);
+module.exports = mongoose.model("messages", MessageSchema, "messages");

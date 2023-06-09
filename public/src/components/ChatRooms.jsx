@@ -36,39 +36,15 @@ function ChatRooms({currentUser, changeChat}) {
       var chatRoomArr = [];
 
       for(var i = 0; i < data.chatRooms.length; i++){
-        // var newChatRoom = document.createElement('div');
-        // newChatRoom.id = data.chatRooms[i]._id;
-        // newChatRoom.className = 'chat-room';
-        // newChatRoom.innerHTML = data.chatRooms[i].name;
-
-        /*newChatRoom.addEventListener('click', function(){
-          const allChatRooms = document.getElementsByClassName('chatRoom');
-          
-          for(var j = 0; j < allChatRooms.length; j++){
-            allChatRooms[j].style.backgroundColor = 'white';
-          }
-
-          const selectedChatRoom = document.getElementById(data.chatRooms[i]._id);
-          // console.log("room", allChatRooms);
-          selectedChatRoom.style.backgroundColor = 'blue';
-        });*/
-
         var newChatRoom = {
           name: data.chatRooms[i].name,
           _id: data.chatRooms[i]._id
         }
 
         chatRoomArr.push(newChatRoom);
-        // if(allChatRooms.find(({ _id }) => _id === data.chatRooms[i]._id) == undefined){
-          // console.log(newChatRoom);
-          // setAllChatRooms([...allChatRooms, newChatRoom]);
-          
-        // }
       }
-      setAllChatRooms([...allChatRooms, chatRoomArr]);
-      // setAllChatRooms(allChatRooms.push(chatRoomArr));
 
-      console.log(allChatRooms);
+      setAllChatRooms([...allChatRooms, chatRoomArr]);
     })();
   },[]);
 

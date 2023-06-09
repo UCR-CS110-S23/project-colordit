@@ -18,7 +18,7 @@ var register = async (req,res,next) => {
         });
 
         delete user.password;
-        return res.json({ status: true, user });
+        return res.json({ status: true, user: user });
     } 
     catch(err) {
         console.log(err.message);
@@ -42,7 +42,7 @@ var login = async (req,res,next) => {
         }
 
         delete user.password;
-        return res.json({ status: true, user });
+        return res.json({ status: true, user: user[0] });
     } 
     catch(err) {
         console.log(err.message);

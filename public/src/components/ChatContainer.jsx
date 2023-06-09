@@ -3,79 +3,60 @@ import styled from "styled-components"
 import ChatInput from './ChatInput';
 import axios from 'axios';
 import Logout from './Logout';
-import { getAllMessagesRoute, recieveMessageRoute, sendMessageRoute } from '../utils/APIRoutes';
+import { getAllMessagesRoute, recieveMessageRoute, addMessageRoute } from '../utils/APIRoutes';
 import { v4 as uuidv4 } from "uuid";
-
+import { useNavigate } from 'react-router-dom';
 
 function ChatContainer({currentChat, currentUser}) {
     const [messages, setMessages] = useState([]);
     const [arrivalMessage, setArrivalMessage] = useState(null);
+    const navigate = useNavigate();
     const scrollRef = useRef();
 
-useEffect(() => {
-    (async () => {
-          const response = await axios.post(getAllMessagesRoute, {
-            from: currentUser._id,
-            to: currentChat._id,
-          });
-          setMessages(response.data);
-    })();
-  }, [currentChat]);
+    useEffect(() => {
+        (async () => {
+            if (currentUser == null) {
+                navigate("/login");
+            } 
+            else{
+                // console.log("logged in");
+                // console.log(currentUser);
+                // console.log(currentChat);
 
-  useEffect(() => {
-    (async () => {
-        const getCurrentChat = async () => {
-            if (currentChat) {
-              await JSON.parse(
-                localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
-              )._id;
+                const response = await axios.post(getAllMessagesRoute, {
+                    room: currentChat
+                });
+
+                setMessages(response.data.projectedMessages);
             }
-          };
-          getCurrentChat();
-    })();
-  }, [currentChat]);
-
+        })();
+    }, [currentChat]);
 
     const handleSendMsg = async (msg) => {
-        await axios.post(sendMessageRoute, {
-          from: currentUser._id,
-          to: currentChat._id,
+        console.log(currentUser._id, currentChat ,msg)
+
+        await axios.post(addMessageRoute, {
+          user: currentUser._id,
+          room: currentChat,
           message: msg
         });
         
         const msgs = [...messages];
-        msgs.push({ fromSelf: true, message: msg });
+        msgs.push(msg);
         setMessages(msgs);
     };
 
-
     return (
         <Container>
-            <div className="chat-header">
-                <div className="user-details">
-                    <div className="avatar">
-                        {/* <img src={`data:image/svg+xml;base64,${currentChat.avatarImage}`} alt='avatar' /> */}
-                    </div>
-                    <div className="username">
-                        <h3>
-                            {/* {currentChat.username} */}
-                        </h3>
-                    </div>
-                </div>
-            </div>
             <div className='chat-messages'>
                 {messages.map((message) => {
                 return (
                     <div>
-                    <div
-                        className={`message ${
-                        message.fromSelf ? "sended" : "recieved"
-                        }`}
-                    >
-                        <div className="content ">
-                        <p>{message.message}</p>
+                        <div>
+                            <div className='message'>
+                                <p className='content'>{message}</p>
+                            </div>
                         </div>
-                    </div>
                     </div>
                 );
                 })}
@@ -87,7 +68,7 @@ useEffect(() => {
 
 const Container = styled.div`
     display: grid;
-    grid-template-rows: 10% 80% 10%;
+    grid-template-rows: 90% 10%;
     gap: 0.1rem;
     overflow: hidden;
     @media screen and (min-width: 720px) and (max-width: 1080px) {
@@ -132,27 +113,15 @@ const Container = styled.div`
         display: flex;
         align-items: center;
         .content {
-        max-width: 40%;
-        overflow-wrap: break-word;
-        padding: 1rem;
-        font-size: 1.1rem;
-        border-radius: 1rem;
-        color: #d1d1d1;
-        @media screen and (min-width: 720px) and (max-width: 1080px) {
-            max-width: 70%;
-        }
-        }
-    }
-    .sended {
-        justify-content: flex-end;
-        .content {
-        background-color: #4f04ff21;
-        }
-    }
-    .recieved {
-        justify-content: flex-start;
-        .content {
-        background-color: #9900ff20;
+            max-width: 40%;
+            overflow-wrap: break-word;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border-radius: 1rem;
+            color: #d1d1d1;
+            @media screen and (min-width: 720px) and (max-width: 1080px) {
+                max-width: 70%;
+            }
         }
     }
     }

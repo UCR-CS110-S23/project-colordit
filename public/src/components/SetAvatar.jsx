@@ -31,6 +31,8 @@ function SetAvatar() {
         const user = await JSON.parse(
           localStorage.getItem('chat-app-user')
         );
+
+        console.log(user);
         
         if(user.isAvatarImageSet){
           navigate("/");
