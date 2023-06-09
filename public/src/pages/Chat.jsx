@@ -9,7 +9,6 @@ import ChatContainer from '../components/ChatContainer';
 import { io } from "socket.io-client";
 
 function Chat() {
-  // const [contacts, setContacts] = useState([]);
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('chat-app-user')));
   const [currentChat, setCurrentChat] = useState(undefined);
   const navigate = useNavigate();
