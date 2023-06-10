@@ -80,18 +80,7 @@ function ChatContainer({currentChat, currentUser, socket}) {
                     <div ref={scrollRef} key={uuidv4()}>
                         <div>
                             <div className='message'>
-                                <div className='content'>
-                                    <div>{message}</div>
-                                    {/* <div className='val' onClick={(event) => {
-                                            if(event.target.style.color == 'red'){
-                                                event.target.style.color = 'white'
-                                            }
-                                            else{
-                                                event.target.style.color = 'red'
-                                            }
-                                        }
-                                    }>♡</div> */}
-                                </div>
+                                <Message m={message} />
                             </div>
                         </div>
                     </div>
