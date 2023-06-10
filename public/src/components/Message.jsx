@@ -1,9 +1,13 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
 import styled from "styled-components"
 
 export default function Message({m}) {
 
-    const [like, setLike] = useState(false);
+    const [like, setLike] = useState(m.like);
+
+    useEffect(() => {
+        setLike(m.like);
+      }, [m.like]);
 
     function reactToMessage() {
         setLike(!like);

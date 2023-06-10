@@ -12,6 +12,7 @@ function ChatContainer({currentChat, currentUser, socket}) {
     const [messages, setMessages] = useState([]);
     const navigate = useNavigate();
     const scrollRef = useRef();
+    
 
     useEffect(() => {
         (async () => {

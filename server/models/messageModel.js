@@ -17,6 +17,11 @@ const MessageSchema = mongoose.Schema(
     timestamp: {
       type: Date,
       default: Date.now
+    },
+    like: {
+      type: Boolean,
+      default: false,
+      required: true
     }
   }
 );
