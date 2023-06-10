@@ -13,11 +13,9 @@ function Chat() {
   const [currentChat, setCurrentChat] = useState(undefined);
   const navigate = useNavigate();
   const socket = io('http://localhost:3001', {
-                  cors: {
-                      origin: 'http://localhost:3001',
-                      credentials: true
-                  }, transports: ['websocket'] 
-              });
+                    cors: {origin: 'http://localhost:3001', credentials: true}, 
+                    transports: ['websocket']
+                  });
 
   useEffect(() => {
     (async() => {
@@ -26,12 +24,6 @@ function Chat() {
       }
     })();
   },[]);
-
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     socket.emit("add-user", currentUser._id);
-  //   }
-  // }, [currentUser, socket])
 
   const handleChatChange = (chat) => {
     socket.emit("join", {"room":chat, "username":currentUser});
