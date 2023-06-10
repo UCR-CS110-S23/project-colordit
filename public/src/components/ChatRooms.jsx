@@ -1,13 +1,12 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import styled from "styled-components";
 import Logo from "../assets/logo.svg";
-import { chatRoomRoute } from '../utils/APIRoutes';
-import { getAllChatRoomsRoute } from '../utils/APIRoutes';
+import { chatRoomRoute, getAllChatRoomsRoute, host  } from '../utils/APIRoutes';
 import axios from "axios";
 import { ToastContainer,toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function ChatRooms({currentUser, changeChat}) {
+function ChatRooms({currentUser, changeChat, socket}) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
@@ -21,7 +20,19 @@ function ChatRooms({currentUser, changeChat}) {
     pauseOnHover: false,
     draggable: false,
     theme: "dark",
-}
+  }
+
+  // useEffect(() => {
+  //   console.log('HERE');
+  //   if (socket) {
+  //       console.log("success");
+  //       console.log("socket", socket);
+  //       socket.on("new-chat-room", (data) => {
+  //         console.log("IN HERE");
+  //         temp(data);
+  //       });
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (currentUser) {
@@ -49,8 +60,6 @@ function ChatRooms({currentUser, changeChat}) {
   },[]);
 
   const createChatroom = () => {
-    console.log("HERE", allChatRooms)
-    console.log(allChatRooms);
     setShowChatForm(!showChatForm);
 
     if(showChatForm){
@@ -67,12 +76,6 @@ function ChatRooms({currentUser, changeChat}) {
     });
 
     document.getElementById('chat-room-name').focus();
-
-    // document.getElementById('chat-room-name').addEventListener('focusout', function(event){
-    //   document.getElementById('chat-form').hidden = true;
-    //   setShowChatForm(true);
-    //   document.getElementById('chat-room-name').value = "";
-    // });
   }
 
   const handleSubmit = async (event) => {
@@ -90,17 +93,23 @@ function ChatRooms({currentUser, changeChat}) {
         toast.error(data.msg, toastOptions);
       }
       else {
-        var newChatRoom = document.createElement('div');
-        newChatRoom.id = data.chatRoom._id;
-        newChatRoom.className = 'chat-room';
-        newChatRoom.innerHTML = chatRoomName;
-        newChatRoom.addEventListener('click', (event) => {
-          chatUpdate(event);
-          changeCurrentChat(event.target.id);
-        });
-        document.getElementById("chat-rooms").appendChild(newChatRoom);
+        // socket.emit("add-room", data);
+        temp(data)
       }
     }
+  }
+
+  const temp = (data) => {
+    var newChatRoom = document.createElement('div');
+    newChatRoom.id = data.chatRoom._id;
+    newChatRoom.className = 'chat-room';
+    newChatRoom.innerHTML = data.chatRoom.name;
+    newChatRoom.addEventListener('click', (event) => {
+      chatUpdate(event);
+      changeCurrentChat(event.target.id);
+    });
+
+    document.getElementById("chat-rooms").appendChild(newChatRoom);
   }
 
   const handleValidation = async () => {

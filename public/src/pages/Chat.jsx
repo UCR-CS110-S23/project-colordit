@@ -12,7 +12,12 @@ function Chat() {
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('chat-app-user')));
   const [currentChat, setCurrentChat] = useState(undefined);
   const navigate = useNavigate();
-  const socket = useRef();
+  const socket = io('http://localhost:3001', {
+                  cors: {
+                      origin: 'http://localhost:3001',
+                      credentials: true
+                  }, transports: ['websocket'] 
+              });
 
   useEffect(() => {
     (async() => {
@@ -22,22 +27,21 @@ function Chat() {
     })();
   },[]);
 
-  useEffect(() => {
-    if (currentUser && !socket.current) {
-      socket.current = io(host);
-      console.log("socket.current", socket.current);
-      socket.current.emit("add-user", currentUser._id);
-    }
-  }, [currentUser, socket])
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     socket.emit("add-user", currentUser._id);
+  //   }
+  // }, [currentUser, socket])
 
   const handleChatChange = (chat) => {
+    socket.emit("join", {"room":chat, "username":currentUser});
     setCurrentChat(chat);
   }
 
   return (
     <Container>
       <div className="container">
-        <ChatRooms currentUser={currentUser} changeChat={handleChatChange}/>
+        <ChatRooms currentUser={currentUser} changeChat={handleChatChange} socket={socket}/>
         {currentUser != null ? (<>{currentChat === undefined ? 
           (<Welcome currentUser={currentUser}/>) : 
           (<ChatContainer currentChat={currentChat} currentUser={currentUser} socket={socket}/>)}</>) : (<></>)

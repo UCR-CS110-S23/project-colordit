@@ -3,13 +3,12 @@ import styled from "styled-components"
 import ChatInput from './ChatInput';
 import axios from 'axios';
 import Logout from './Logout';
-import { getAllMessagesRoute, receiveMessageRoute, addMessageRoute } from '../utils/APIRoutes';
+import { getAllMessagesRoute, receiveMessageRoute, addMessageRoute, host } from '../utils/APIRoutes';
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from 'react-router-dom';
 
 function ChatContainer({currentChat, currentUser, socket}) {
     const [messages, setMessages] = useState([]);
-    const [arrivalMessage, setArrivalMessage] = useState(null);
     const navigate = useNavigate();
     const scrollRef = useRef();
 
@@ -19,67 +18,171 @@ function ChatContainer({currentChat, currentUser, socket}) {
                 navigate("/login");
             } 
             else{
-                // console.log("logged in");
-                // console.log(currentUser);
-                // console.log(currentChat);
-
                 const response = await axios.post(getAllMessagesRoute, {
                     room: currentChat
                 });
 
                 setMessages(response.data.projectedMessages);
+
+                // socket.emit("add-room", currentChat);
             }
+
+            socket.on("chat message", (data) => {
+                console.log("SENDER ROOM",data.room)
+                console.log("CURRENT ROOM",currentChat);
+                if(currentChat === data.room){
+                    console.log("adding message");
+                    var msgs = [...messages];
+                    msgs.push(data.message);
+                    console.log(msgs);
+                    setMessages(msgs);
+                }
+                else{
+                    console.log("NOT EQUAL");
+                    console.log(messages);
+                }
+            });
+            
         })();
+
+        socket.on("chat message", (data) => {
+            console.log("SENDER ROOM",data.room)
+            console.log("CURRENT ROOM",currentChat);
+            if(currentChat === data.room){
+                console.log("adding message");
+                var msgs = [...messages];
+                msgs.push(data.message);
+                console.log(msgs);
+                setMessages(msgs);
+            }
+            else{
+                console.log("NOT EQUAL");
+                console.log(messages);
+            }
+        });
     }, [currentChat]);
 
-    const handleSendMsg = async (msg) => {
-        //console.log(currentUser._id, currentChat ,msg);
+    socket.on("chat message", (data) => {
+        console.log("SENDER ROOM",data.room)
+        console.log("CURRENT ROOM",currentChat);
+        if(currentChat === data.room){
+            console.log("adding message");
+            var msgs = [...messages];
+            msgs.push(data.message);
+            console.log(msgs);
+            setMessages(msgs);
+        }
+        else{
+            console.log("NOT EQUAL");
+            console.log(messages);
+        }
+    });
 
+    const handleSendMsg = async (msg) => {
         await axios.post(addMessageRoute, {
           user: currentUser._id,
           room: currentChat,
           message: msg
         });
 
-        await socket.current.emit("send-msg", {
-            to: currentChat,
-            from: currentUser._id,
-            message: msg,
-        }); 
+        socket.emit("chat message", {message: msg, room: currentChat});
 
-        console.log("current", socket.current);
-        if (socket.current) {
-            console.log("success");
-            socket.current.on("msg-received", (msg) => {
-                setArrivalMessage({fromSelf:false, message: msg});
-            });
-        }
-        else {
-            console.log("no current");
-        }
+        socket.on("chat message", (data) => {
+            console.log("SENDER ROOM",data.room)
+            console.log("CURRENT ROOM",currentChat);
+            if(currentChat === data.room){
+                console.log("adding message");
+                var msgs = [...messages];
+                msgs.push(data.message);
+                console.log(msgs);
+                setMessages(msgs);
+            }
+            else{
+                console.log("NOT EQUAL");
+                console.log(messages);
+            }
+        });
+
+        // socket.emit("send-msg", {
+        //     room: currentChat,
+        //     user: currentUser._id,
+        //     message: msg
+        // }); 
+
+        // console.log("current", socket.current);
+        // if (socket.current) {
+        //     console.log("success");
+        //     console.log("current", socket.current);
+        //     socket.current.on("msg-received", (msg) => {
+        //         console.log("in here");
+        //         setArrivalMessage({fromSelf:false, message: msg});
+        //     });
+        // }
+        // else {
+        //     console.log("no current");
+        // }
         
-        const msgs = [...messages];
-        msgs.push(msg);
-        setMessages(msgs);
+        // const msgs = [...messages];
+        // msgs.push(msg);
+        // setMessages(msgs);
     };
 
-    // useEffect(() => {
+    // if (socket.current) {
+    //     console.log("success");
     //     console.log("current", socket.current);
-    //     if (socket.current) {
-    //         console.log("success");
-    //         socket.current.on("msg-received", (msg) => {
-    //             setArrivalMessage({fromSelf:false, message: msg});
-    //         });
-    //     }
-    //     else {
-    //         console.log("no current");
-    //     }
-    // }, [socket.current]);
+    //     socket.current.on("msg-received", (msg) => {
+    //         console.log("please work");
+    //         setArrivalMessage({fromSelf:false, message: msg});
+    //     });
+    // }
+    socket.on("chat message", (data) => {
+        console.log("SENDER ROOM",data.room)
+        console.log("CURRENT ROOM",currentChat);
+        if(currentChat === data.room){
+            console.log("adding message");
+            var msgs = [...messages];
+            msgs.push(data.message);
+            console.log(msgs);
+            setMessages(msgs);
+        }
+        else{
+            console.log("NOT EQUAL");
+            console.log(messages);
+        }
+    });
 
     useEffect(() => {
-        arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
-        console.log("arrival", arrivalMessage);
-    }, [arrivalMessage]);
+        socket.on("chat message", (data) => {
+            console.log("SENDER ROOM",data.room)
+            console.log("CURRENT ROOM",currentChat);
+            if(currentChat === data.room){
+                console.log("adding message");
+                var msgs = [...messages];
+                msgs.push(data.message);
+                console.log(msgs);
+                setMessages(msgs);
+            }
+            else{
+                console.log("NOT EQUAL");
+                console.log(messages);
+            }
+        });
+    });
+    
+
+    // useEffect(() => {
+        // console.log('HERE');
+        // if (socket) {
+            // console.log("success");
+            // console.log("socket", socket);
+    //         socket.on("chat message", (data) => {
+    //             console.log(data.room, currentChat)
+    //             if(data.room == currentChat){
+    //                 setArrivalMessage(data.message);
+    //             }
+    //         });
+    //     }
+    // }, []);
 
     useEffect(() => {
         scrollRef.current?.scrollIntoView({behavior:"smooth"})

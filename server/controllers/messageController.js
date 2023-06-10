@@ -31,7 +31,7 @@ getAllMessages = async (req, res, next) => {
       room: room
     });
 
-    console.log(messages);
+    // console.log(messages);
 
     const projectedMessages = messages.map((msg) => {
       return msg.message;
