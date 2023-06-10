@@ -30,29 +30,6 @@ const io = socket(server, {
     }
 });
 
-const sessionMiddleware = session({
-    resave: false, // Whether to save the session to the store on every request
-    saveUninitialized: false, // Whether to save uninitialized sessions to the store
-    secret: process.env.SESSION_SECRET,
-});
-
-app.use(sessionMiddleware);
-
-io.use((socket, next) => {
-    console.log("socket io middleware")
-    sessionMiddleware(socket.request, {}, next);
-});
-  
-io.use((socket, next) => {
-    if (socket.request.session && socket.request.session.authenticated) {
-        next();
-    } 
-    else {
-        console.log("unauthorized")
-        next(new Error('unauthorized'));
-    }
-});
-
 io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         console.log("user Disconnected")
@@ -61,13 +38,14 @@ io.on("connection", (socket) => {
     socket.on("chat message", (data) => {
         console.log("got the message", data.message);
         console.log(data.room);
-        io.to(data.room).emit("chat message", data);
+        io.emit("chat message", data);
     });
     
     socket.on("join", (data) => {
         socket.join(data.room);
-        room = data.room
-        userName = data.username
-        console.log(`user is joined to room ${data.room}`)
+        room = data.room;
+        userName = data.username;
+        console.log(typeof data.room);
+        console.log(`user is joined to room ${data.room}`);
     });
 });

@@ -40,9 +40,9 @@ getAllMessages = async (req, res, next) => {
 
     res.json({projectedMessages});
   } 
-  catch (ex) {
+  catch (err) {
     console.log(err.message);
-    next(ex);
+    next(err);
   }
 };
 

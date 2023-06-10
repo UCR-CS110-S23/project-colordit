@@ -22,18 +22,6 @@ function ChatRooms({currentUser, changeChat, socket}) {
     theme: "dark",
   }
 
-  // useEffect(() => {
-  //   console.log('HERE');
-  //   if (socket) {
-  //       console.log("success");
-  //       console.log("socket", socket);
-  //       socket.on("new-chat-room", (data) => {
-  //         console.log("IN HERE");
-  //         temp(data);
-  //       });
-  //   }
-  // }, []);
-
   useEffect(() => {
     if (currentUser) {
       setCurrentUserImage(currentUser.avatarImage);
@@ -93,7 +81,6 @@ function ChatRooms({currentUser, changeChat, socket}) {
         toast.error(data.msg, toastOptions);
       }
       else {
-        // socket.emit("add-room", data);
         temp(data)
       }
     }
@@ -152,6 +139,7 @@ function ChatRooms({currentUser, changeChat, socket}) {
 
     const selectedChatRoom = document.getElementById(event.target.id);
     selectedChatRoom.style.backgroundColor = 'white';
+    console.log(event.target);
     changeCurrentChat(event.target.id);
   }
 

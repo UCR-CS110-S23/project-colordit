@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 function ChatContainer({currentChat, currentUser, socket}) {
     const [messages, setMessages] = useState([]);
+    const [like, setLike] = useState(false);
     const navigate = useNavigate();
     const scrollRef = useRef();
     
@@ -20,65 +21,15 @@ function ChatContainer({currentChat, currentUser, socket}) {
                 navigate("/login");
             } 
             else{
-                const response = await axios.post(getAllMessagesRoute, {
-                    room: currentChat
-                });
-
+                const response = await axios.post(getAllMessagesRoute, {room: currentChat});
                 setMessages(response.data.projectedMessages);
-
-                // socket.emit("add-room", currentChat);
             }
-
-            socket.on("chat message", (data) => {
-                console.log("SENDER ROOM",data.room)
-                console.log("CURRENT ROOM",currentChat);
-                if(currentChat === data.room){
-                    console.log("adding message");
-                    var msgs = [...messages];
-                    msgs.push(data.message);
-                    console.log(msgs);
-                    setMessages(msgs);
-                }
-                else{
-                    console.log("NOT EQUAL");
-                    console.log(messages);
-                }
-            });
-            
         })();
-
-        socket.on("chat message", (data) => {
-            console.log("SENDER ROOM",data.room)
-            console.log("CURRENT ROOM",currentChat);
-            if(currentChat === data.room){
-                console.log("adding message");
-                var msgs = [...messages];
-                msgs.push(data.message);
-                console.log(msgs);
-                setMessages(msgs);
-            }
-            else{
-                console.log("NOT EQUAL");
-                console.log(messages);
-            }
-        });
     }, [currentChat]);
 
-    socket.on("chat message", (data) => {
-        console.log("SENDER ROOM",data.room)
-        console.log("CURRENT ROOM",currentChat);
-        if(currentChat === data.room){
-            console.log("adding message");
-            var msgs = [...messages];
-            msgs.push(data.message);
-            console.log(msgs);
-            setMessages(msgs);
-        }
-        else{
-            console.log("NOT EQUAL");
-            console.log(messages);
-        }
-    });
+    useEffect(() => {
+        scrollRef.current?.scrollIntoView({behavior:"smooth"})
+    }, [messages]);
 
     const handleSendMsg = async (msg) => {
         await axios.post(addMessageRoute, {
@@ -88,61 +39,29 @@ function ChatContainer({currentChat, currentUser, socket}) {
         });
 
         socket.emit("chat message", {message: msg, room: currentChat});
-
-        socket.on("chat message", (data) => {
-            console.log("SENDER ROOM",data.room)
-            console.log("CURRENT ROOM",currentChat);
-            if(currentChat === data.room){
-                console.log("adding message");
-                var msgs = [...messages];
-                msgs.push(data.message);
-                console.log(msgs);
-                setMessages(msgs);
-            }
-            else{
-                console.log("NOT EQUAL");
-                console.log(messages);
-            }
-        });
-
-        // socket.emit("send-msg", {
-        //     room: currentChat,
-        //     user: currentUser._id,
-        //     message: msg
-        // }); 
-
-        // console.log("current", socket.current);
-        // if (socket.current) {
-        //     console.log("success");
-        //     console.log("current", socket.current);
-        //     socket.current.on("msg-received", (msg) => {
-        //         console.log("in here");
-        //         setArrivalMessage({fromSelf:false, message: msg});
-        //     });
-        // }
-        // else {
-        //     console.log("no current");
-        // }
-        
-        // const msgs = [...messages];
-        // msgs.push(msg);
-        // setMessages(msgs);
     };
 
-    // if (socket.current) {
-    //     console.log("success");
-    //     console.log("current", socket.current);
-    //     socket.current.on("msg-received", (msg) => {
-    //         console.log("please work");
-    //         setArrivalMessage({fromSelf:false, message: msg});
-    //     });
-    // }
+    const likeMessage = (event) => {
+        setLike(!like);
+        // var heart = document.getElementById(event.target.id);
+        console.log(event.target);
+
+        if(like == true){
+            console.log("show");
+            event.target.style.color = 'red';
+        }
+        else{
+            event.target.style.color = 'true';
+        }
+    }
+    
     socket.on("chat message", (data) => {
         console.log("SENDER ROOM",data.room)
         console.log("CURRENT ROOM",currentChat);
         if(currentChat === data.room){
             console.log("adding message");
             var msgs = [...messages];
+            console.log(data);  
             msgs.push(data.message);
             console.log(msgs);
             setMessages(msgs);
@@ -153,43 +72,6 @@ function ChatContainer({currentChat, currentUser, socket}) {
         }
     });
 
-    useEffect(() => {
-        socket.on("chat message", (data) => {
-            console.log("SENDER ROOM",data.room)
-            console.log("CURRENT ROOM",currentChat);
-            if(currentChat === data.room){
-                console.log("adding message");
-                var msgs = [...messages];
-                msgs.push(data.message);
-                console.log(msgs);
-                setMessages(msgs);
-            }
-            else{
-                console.log("NOT EQUAL");
-                console.log(messages);
-            }
-        });
-    });
-    
-
-    // useEffect(() => {
-        // console.log('HERE');
-        // if (socket) {
-            // console.log("success");
-            // console.log("socket", socket);
-    //         socket.on("chat message", (data) => {
-    //             console.log(data.room, currentChat)
-    //             if(data.room == currentChat){
-    //                 setArrivalMessage(data.message);
-    //             }
-    //         });
-    //     }
-    // }, []);
-
-    useEffect(() => {
-        scrollRef.current?.scrollIntoView({behavior:"smooth"})
-    }, [messages]);
-
     return (
         <Container>
             <div className='chat-messages'>
@@ -198,7 +80,18 @@ function ChatContainer({currentChat, currentUser, socket}) {
                     <div ref={scrollRef} key={uuidv4()}>
                         <div>
                             <div className='message'>
-                                <Message m={message} />
+                                <div className='content'>
+                                    <div>{message}</div>
+                                    {/* <div className='val' onClick={(event) => {
+                                            if(event.target.style.color == 'red'){
+                                                event.target.style.color = 'white'
+                                            }
+                                            else{
+                                                event.target.style.color = 'red'
+                                            }
+                                        }
+                                    }>♡</div> */}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -268,6 +161,11 @@ const Container = styled.div`
             }
         }
     }
+    }
+
+    .val:hover{
+        color: blue;
+        cursor: pointer;
     }
 `;
 
