@@ -40,20 +40,6 @@ function ChatContainer({currentChat, currentUser, socket}) {
 
         socket.emit("chat message", {message: msg, room: currentChat});
     };
-
-    const likeMessage = (event) => {
-        setLike(!like);
-        // var heart = document.getElementById(event.target.id);
-        console.log(event.target);
-
-        if(like == true){
-            console.log("show");
-            event.target.style.color = 'red';
-        }
-        else{
-            event.target.style.color = 'true';
-        }
-    }
     
     socket.on("chat message", (data) => {
         console.log("SENDER ROOM",data.room)
@@ -150,11 +136,6 @@ const Container = styled.div`
             }
         }
     }
-    }
-
-    .val:hover{
-        color: blue;
-        cursor: pointer;
     }
 `;
 

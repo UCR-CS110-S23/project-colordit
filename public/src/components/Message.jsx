@@ -36,8 +36,10 @@ const MessageDiv = styled.div`
   border-radius: 0.3rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   user-select: none;
+  transition: 0.2s;
   &:hover {
-    cursor: default;
+    cursor: pointer;
+    background-color:pink;
   }
 `;
 
