@@ -2,12 +2,13 @@ const Messages = require("../models/messageModel");
 
 addMessage = async (req, res, next) => {
   try {
-    const { user, room, message } = req.body;
+    const { user, room, message, like } = req.body;
 
     const data = await Messages.create({
       message: message,
       room: room,
-      user: user
+      user: user,
+      like: like
     });
 
     if (data) {

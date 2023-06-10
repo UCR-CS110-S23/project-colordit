@@ -3,6 +3,7 @@ import styled from "styled-components"
 import ChatInput from './ChatInput';
 import axios from 'axios';
 import Logout from './Logout';
+import Message from './Message';
 import { getAllMessagesRoute, receiveMessageRoute, addMessageRoute, host } from '../utils/APIRoutes';
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ function ChatContainer({currentChat, currentUser, socket}) {
     const [like, setLike] = useState(false);
     const navigate = useNavigate();
     const scrollRef = useRef();
+    
 
     useEffect(() => {
         (async () => {
@@ -80,7 +82,7 @@ function ChatContainer({currentChat, currentUser, socket}) {
                             <div className='message'>
                                 <div className='content'>
                                     <div>{message}</div>
-                                    <div className='val' onClick={(event) => {
+                                    {/* <div className='val' onClick={(event) => {
                                             if(event.target.style.color == 'red'){
                                                 event.target.style.color = 'white'
                                             }
@@ -88,7 +90,7 @@ function ChatContainer({currentChat, currentUser, socket}) {
                                                 event.target.style.color = 'red'
                                             }
                                         }
-                                    }>♡</div>
+                                    }>♡</div> */}
                                 </div>
                             </div>
                         </div>
@@ -107,7 +109,7 @@ const Container = styled.div`
     gap: 0.1rem;
     overflow: hidden;
     @media screen and (min-width: 720px) and (max-width: 1080px) {
-    grid-template-rows: 15% 70% 15%;
+    grid-template-rows: 85% 15%;
     }
     .chat-header {
     display: flex;
