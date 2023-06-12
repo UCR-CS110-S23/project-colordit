@@ -13,10 +13,11 @@ var register = async (req,res,next) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedCity = await bcrypt.hash(city, 10);
         const user = await userModel.create({
             username: username,
             password: hashedPassword,
-            city: city
+            city: hashedCity
         });
 
         delete user.password;
@@ -43,7 +44,9 @@ var login = async (req,res,next) => {
             return res.json({msg: "Incorrect username, password, or security answer", status: false});
         }
 
-        if (user[0].city != securityAnswer) {
+        const isCityValid = await bcrypt.compare(securityAnswer, user[0].city);
+
+        if (!isCityValid){
             return res.json({msg: "Incorrect username, password, or security answer", status: false});
         }
 
