@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 function ChatContainer({currentChat, currentUser, socket}) {
     const [messages, setMessages] = useState([]);
     const [like, setLike] = useState(false);
+    const [currentQuestion, setCurrentQuestion] = useState(null);
     const navigate = useNavigate();
     const scrollRef = useRef();
     
