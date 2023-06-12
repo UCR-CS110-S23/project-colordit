@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import Logo from "../assets/logo.svg";
-import { ToastContainer,toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { Link, useNavigate } from 'react-router-dom';
+import Logo from '../assets/logo.svg';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 import { registerRoute } from '../utils/APIRoutes';
 
 function Register() {
-    const navigate = useNavigate();
-    const [values,setValues] = useState({
-        username: "",
-        password: "",
-        confirmPassword: "",
-    });
+  const navigate = useNavigate();
+  const [values, setValues] = useState({
+    username: '',
+    password: '',
+    confirmPassword: '',
+    birthCity: '', // Added birthCity field
+  });
+
 
     const toastOptions = {
         position: 'bottom-right',
@@ -26,13 +28,14 @@ function Register() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         toast.dismiss();
-
+    
         if (await handleValidation()) {
-            const { username, password } = values;
-            const { data } = await axios.post(registerRoute, {
-                username,
-                password
-            });
+          const { username, password, birthCity } = values; // Retrieve birthCity value
+          const { data } = await axios.post(registerRoute, {
+            username,
+            password,
+            birthCity, // Include birthCity in the request
+          });
 
             if (data.status === false) {
                 toast.error(data.msg, toastOptions);
@@ -84,45 +87,52 @@ function Register() {
     }
 
     const handleChange = (event) => {
-        setValues({ ...values,[event.target.name]:event.target.value })
-    };
-
-    return (
+        setValues({ ...values, [event.target.name]: event.target.value });
+      };
+    
+      return (
         <>
-            <FormContainer>
-                <form onSubmit={(event)=>handleSubmit(event)}>
-                    <div className="brand">
-                        <img src={Logo} alt='logo' />
-                        <h1>
-                            colordit chat
-                        </h1>
-                    </div>
-                    <input 
-                        type='text' 
-                        placeholder='Username' 
-                        name='username' 
-                        onChange={(e) => handleChange(e)} 
-                    />
-                    <input 
-                        type='password' 
-                        placeholder='Password' 
-                        name='password' 
-                        onChange={(e) => handleChange(e)} 
-                    />
-                    <input 
-                        type='password' 
-                        placeholder='Confirm Password' 
-                        name='confirmPassword' 
-                        onChange={(e) => handleChange(e)} 
-                    />
-                    <button type='submit'>Create User</button>
-                    <span>already have an account? <Link to="/login">Login</Link></span>
-                </form>
-            </FormContainer>
-            <ToastContainer />
+          <FormContainer>
+            <form onSubmit={(event) => handleSubmit(event)}>
+              <div className="brand">
+                <img src={Logo} alt="logo" />
+                <h1>colordit chat</h1>
+              </div>
+              <input
+                type="text"
+                placeholder="Username"
+                name="username"
+                onChange={(e) => handleChange(e)}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                name="password"
+                onChange={(e) => handleChange(e)}
+              />
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                name="confirmPassword"
+                onChange={(e) => handleChange(e)}
+              />
+            <InputLabel htmlFor="birthCity">Security Question</InputLabel>
+              <input
+                type="text"
+                placeholder="Birth City"
+                name="birthCity"
+                onChange={(e) => handleChange(e)}
+              />
+              <button type="submit">Create User</button>
+              <span>
+                already have an account? <Link to="/login">Login</Link>
+              </span>
+            </form>
+          </FormContainer>
+          <ToastContainer />
         </>
-    )
-}
+      );
+    }
 
 const FormContainer = styled.div`
     height: 100vh;
@@ -193,6 +203,12 @@ const FormContainer = styled.div`
             }
         }
     }
+`;
+
+const InputLabel = styled.label`
+  color: white;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
 `;
 
 export default Register
