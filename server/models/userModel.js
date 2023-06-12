@@ -13,6 +13,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         min: 8
     },
+    city: {
+        type: String,
+        required: true
+    },
     isAvatarImageSet: {
         type: Boolean,
         default: false

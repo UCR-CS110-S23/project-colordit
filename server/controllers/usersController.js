@@ -5,6 +5,7 @@ var register = async (req,res,next) => {
     try {
         const username = req.body.username;
         const password = req.body.password;
+        const city = req.body.birthCity;
         const data = await userModel.find({username: username});
 
         if (data != ""){
@@ -14,7 +15,8 @@ var register = async (req,res,next) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userModel.create({
             username: username,
-            password: hashedPassword
+            password: hashedPassword,
+            city: city
         });
 
         delete user.password;
@@ -28,17 +30,21 @@ var register = async (req,res,next) => {
 
 var login = async (req,res,next) => {
     try {
-        const {username, password} = req.body;
+        const {username, password, securityAnswer} = req.body;
         const user = await userModel.find({username: username});
 
         if (user == ""){
-            return res.json({msg: "Incorrect username or password", status: false});
+            return res.json({msg: "Incorrect username, password, or security answer", status: false});
         }
 
         const isPasswordValid = await bcrypt.compare(password, user[0].password);
 
         if (!isPasswordValid){
-            return res.json({msg: "Incorrect username or password", status: false});
+            return res.json({msg: "Incorrect username, password, or security answer", status: false});
+        }
+
+        if (user[0].city != securityAnswer) {
+            return res.json({msg: "Incorrect username, password, or security answer", status: false});
         }
 
         delete user.password;
