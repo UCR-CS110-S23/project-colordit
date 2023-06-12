@@ -34,9 +34,9 @@ function SetAvatar() {
 
         console.log(user);
         
-        if(user.isAvatarImageSet){
-          navigate("/");
-        }
+        // if(user.isAvatarImageSet){
+        //   navigate("/");
+        // }
       }
     })();
   }, []);

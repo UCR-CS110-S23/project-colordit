@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react'
 import styled from "styled-components";
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from "../assets/logo.svg";
 import { chatRoomRoute, getAllChatRoomsRoute, host  } from '../utils/APIRoutes';
 import axios from "axios";
@@ -13,6 +14,7 @@ function ChatRooms({currentUser, changeChat, socket}) {
   const [showChatForm, setShowChatForm] = useState(true);
   const [chatRoomName, setChatRoomName] = useState("");
   const [allChatRooms,  setAllChatRooms] = useState([]);
+  const navigate = useNavigate();
 
   const toastOptions = {
     position: 'bottom-right',
@@ -143,6 +145,10 @@ function ChatRooms({currentUser, changeChat, socket}) {
     changeCurrentChat(event.target.id);
   }
 
+  const changeAvatar = () => {
+    navigate('/SetAvatar');
+  }
+
   return (
     <>
       {
@@ -183,7 +189,9 @@ function ChatRooms({currentUser, changeChat, socket}) {
             </div>
             <div className="current-user">
               <div className="avatar">
-                <img src={`data:image/svg+xml;base64,${currentUserImage}`} alt="avatar"/>
+                <button onClick={() => changeAvatar()}>
+                  <img src={`data:image/svg+xml;base64,${currentUserImage}`} alt="avatar"/>
+                </button>
               </div>
               <div className="username">
                 <h2>
