@@ -23,7 +23,8 @@ function ChatContainer({currentChat, currentUser, socket}) {
             } 
             else{
                 const response = await axios.post(getAllMessagesRoute, {room: currentChat});
-                setMessages(response.data.projectedMessages);
+                console.log("response", response.data.messages);
+                setMessages(response.data.messages);
             }
         })();
     }, [currentChat]);
@@ -62,12 +63,12 @@ function ChatContainer({currentChat, currentUser, socket}) {
     return (
         <Container>
             <div className='chat-messages'>
-                {messages.map((message) => {
+                {messages.map(({message, like, user, room, _id, timestamp}) => {
                 return (
                     <div ref={scrollRef} key={uuidv4()}>
                         <div>
                             <div className='message'>
-                                <Message m={message} />
+                                <Message m={message} m_id={_id} />
                             </div>
                         </div>
                     </div>

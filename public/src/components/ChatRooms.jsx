@@ -196,8 +196,8 @@ function ChatRooms({currentUser, changeChat, socket}) {
               <div className="username">
                 <h2>
                   {currentUserName}
-                </h2>
-              </div>
+                </h2>  
+              </div>              
             </div>
             <ToastContainer />
           </Container>
@@ -310,6 +310,10 @@ const Container = styled.div`
     // width: 90%;
     gap: 2rem;
     .avatar {
+      button {
+        background: none;
+        border: none;
+      }
       img {
         height: 4rem;
         max-inline-size: 100%;

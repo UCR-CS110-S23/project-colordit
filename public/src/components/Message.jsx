@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { updateMessageRoute } from '../utils/APIRoutes'; 
+import axios from 'axios';
 
-export default function Message({ m }) {
+export default function Message({ m, m_id }) {
   const [like, setLike] = useState(m.like);
   const [isEditing, setIsEditing] = useState(false);
+  const [currentMessage, setCurrentMessage] = useState(m);
   const [editedMessage, setEditedMessage] = useState(m);
 
   useEffect(() => {
@@ -11,39 +14,43 @@ export default function Message({ m }) {
     setEditedMessage(m);
   }, [m]);
 
-  function reactToMessage() {
+  const reactToMessage = () => {
     setLike(!like);
   }
 
-  function toggleEdit() {
+  const toggleEdit = () => {
     setIsEditing(!isEditing);
   }
 
-  function handleEdit(e) {
+  const handleEdit = (e) => {
     setEditedMessage(e.target.value);
   }
 
-  function saveEdit() {
-    console.log('Edited Message:', editedMessage);
-    setIsEditing(false);
+  const saveEdit = async () => {
+    setCurrentMessage(editedMessage);
+    toggleEdit();
+    await axios.post(updateMessageRoute, {
+      message: editedMessage,
+      id: m_id
+    });
   }
 
   return (
     <Container>
       <MessageDiv>
         {!isEditing ? (
-          <p onDoubleClick={reactToMessage}>{editedMessage}</p>
-        ) : (
-          <EditInput value={editedMessage} onChange={handleEdit} />
+          <p onDoubleClick={reactToMessage}>{currentMessage}</p>
+        ) : ( 
+          <EditInput value={editedMessage} onChange={handleEdit}/>
         )}
       </MessageDiv>
       {like && <LikeEmojiDiv>♡</LikeEmojiDiv>}
       <ButtonContainer>
-        <EditButton onClick={toggleEdit} rounded={!isEditing}>
+        <EditButton onClick={toggleEdit}>
           {!isEditing ? 'Edit' : 'Cancel'}
         </EditButton>
         {isEditing && (
-          <SaveButton onClick={saveEdit} rounded>
+          <SaveButton onClick={() => {saveEdit()}}>
             Save
           </SaveButton>
         )}

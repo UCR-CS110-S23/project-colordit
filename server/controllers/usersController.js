@@ -55,7 +55,7 @@ var setAvatar = async (req,res,next) => {
 
         const userId = req.params.id;
         const avatarImage = req.body.image;
-        const user = await userModel.findByIdAndUpdate(userId, {
+        await userModel.findByIdAndUpdate(userId, {
             isAvatarImageSet: true,
             avatarImage: avatarImage
         });

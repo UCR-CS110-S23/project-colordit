@@ -38,7 +38,7 @@ getAllMessages = async (req, res, next) => {
       return msg.message;
     });
 
-    res.json({projectedMessages});
+    res.json({messages});
   } 
   catch (err) {
     console.log(err.message);
@@ -46,5 +46,26 @@ getAllMessages = async (req, res, next) => {
   }
 };
 
+updateMessage = async (req, res, next) => {
+  try {
+    const { message, id } = req.body;
+
+    console.log(message, id);
+
+    const thing = await Messages.findByIdAndUpdate(id, {
+      message: message
+    });
+
+    console.log(thing);
+
+    console.log("here");
+  }
+  catch (err) {
+    console.log(err.message);
+    next(err);
+  }
+}
+
 module.exports.addMessage = addMessage;
 module.exports.getAllMessages = getAllMessages;
+module.exports.updateMessage = updateMessage;

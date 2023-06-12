@@ -7,3 +7,4 @@ export const addMessageRoute = `${host}/api/messages/addMessage`;
 export const getAllMessagesRoute = `${host}/api/messages/getAllMessages`;
 export const chatRoomRoute = `${host}/api/auth/chatRoom`;
 export const getAllChatRoomsRoute = `${host}/api/auth/getAllChatRooms`;
+export const updateMessageRoute = `${host}/api/messages/updateMessage`;
