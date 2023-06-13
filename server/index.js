@@ -36,9 +36,9 @@ io.on("connection", (socket) => {
     });
     
     socket.on("chat message", (data) => {
-        console.log("got the message", data.message);
+        console.log("got the message", data.message.message);
         console.log(data.room);
-        io.emit("chat message", data);
+        io.emit("chat message", data.message);
     });
     
     socket.on("join", (data) => {

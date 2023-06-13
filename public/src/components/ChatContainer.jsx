@@ -34,13 +34,13 @@ function ChatContainer({currentChat, currentUser, socket}) {
     }, [messages]);
 
     const handleSendMsg = async (msg) => {
-        await axios.post(addMessageRoute, {
+        const newMessage = await axios.post(addMessageRoute, {
           user: currentUser._id,
           room: currentChat,
           message: msg
         });
-
-        socket.emit("chat message", {message: msg, room: currentChat});
+        console.log("NEW MESSAGE", newMessage.data.data);
+        socket.emit("chat message", {message: newMessage.data.data, room: currentChat});
     };
     
     socket.on("chat message", (data) => {
@@ -50,7 +50,7 @@ function ChatContainer({currentChat, currentUser, socket}) {
             console.log("adding message");
             var msgs = [...messages];
             console.log(data);  
-            msgs.push(data.message);
+            msgs.push(data);
             console.log(msgs);
             setMessages(msgs);
         }
@@ -68,7 +68,7 @@ function ChatContainer({currentChat, currentUser, socket}) {
                     <div ref={scrollRef} key={uuidv4()}>
                         <div>
                             <div className='message'>
-                                <Message m={message} m_id={_id} />
+                                <Message m={message} m_id={_id} m_like={like}/>
                             </div>
                         </div>
                     </div>

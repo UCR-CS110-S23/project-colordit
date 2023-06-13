@@ -3,14 +3,14 @@ import styled from 'styled-components';
 import { updateMessageRoute } from '../utils/APIRoutes'; 
 import axios from 'axios';
 
-export default function Message({ m, m_id }) {
-  const [like, setLike] = useState(m.like);
+export default function Message({ m, m_id, m_like }) {
+  const [like, setLike] = useState(m_like);
   const [isEditing, setIsEditing] = useState(false);
   const [currentMessage, setCurrentMessage] = useState(m);
   const [editedMessage, setEditedMessage] = useState(m);
 
   useEffect(() => {
-    setLike(m.like);
+    setLike(m_like);
     setEditedMessage(m);
   }, [m]);
 

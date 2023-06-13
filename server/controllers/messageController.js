@@ -12,7 +12,7 @@ addMessage = async (req, res, next) => {
     });
 
     if (data) {
-      return res.json({ msg: "Message added successfully." });
+      return res.json({ msg: "Message added successfully.", data: data });
     } 
     else {
       return res.json({ msg: "Failed to add message to the database" });
