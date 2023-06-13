@@ -12,8 +12,8 @@ function Chat() {
   const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('chat-app-user')));
   const [currentChat, setCurrentChat] = useState(undefined);
   const navigate = useNavigate();
-  const socket = io('https://colordit.herokuapp.com/', {
-                    cors: {origin: 'https://colordit.herokuapp.com/', credentials: true}, 
+  const socket = io('http://localhost:3001', {
+                    cors: {origin: 'http://localhost:3001', credentials: true}, 
                     transports: ['websocket']
                   });
 
